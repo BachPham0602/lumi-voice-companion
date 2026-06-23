@@ -54,7 +54,7 @@ export function LumiFace({ expression }: LumiFaceProps) {
   const eyeShape = eyeShapeFor(expression, blink);
   const mouth = mouthPathFor(expression);
   const brows = browPathsFor(expression);
-  const showAnger = expression === "concerned" || expression === "sad" || expression === "confused";
+  const showAnger = expression !== "happy" && expression !== "excited" && expression !== "sleepy";
 
   // SVG canvas — wide so the features can spread out like the reference.
   // viewBox: 800 x 600. Eyes centered around y=290, large.
