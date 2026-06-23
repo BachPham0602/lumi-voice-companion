@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import { Menu } from "lucide-react";
 
 import { LumiFace } from "@/components/LumiFace";
-import { VoiceOverlay } from "@/components/VoiceOverlay";
-import { ChatOverlay } from "@/components/ChatOverlay";
+import { MessengerChat } from "@/components/MessengerChat";
+import { ChatComposer } from "@/components/ChatComposer";
 import { StatusIndicator } from "@/components/StatusIndicator";
 import { EmotionIndicator } from "@/components/EmotionIndicator";
 import { ConversationSidebar } from "@/components/ConversationSidebar";
@@ -37,15 +37,7 @@ function LumiHome() {
     onMessage: (m) => conversations.appendMessage(m),
   });
   const voice = useVoiceState();
-  const [chatOpen, setChatOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  // Ask for microphone permission on first load
-  useEffect(() => {
-    if (voice.permission === "unknown" || voice.permission === "prompt") {
-      void voice.requestMic();
-    }
-  }, [voice.permission, voice.requestMic]);
 
   // Reflect mic permission + mute into pipeline state
   useEffect(() => {
@@ -60,20 +52,34 @@ function LumiHome() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [voice.isMuted, voice.permission, voice.isListening, pipeline.snapshot.state]);
 
+  const isListening = pipeline.snapshot.state === "listening";
+  const micActive = voice.isListening && voice.permission === "granted" && !voice.isMuted;
+
+  const handleToggleMic = async () => {
+    if (voice.permission !== "granted") {
+      await voice.requestMic();
+      return;
+    }
+    voice.toggleMute();
+  };
+
   return (
     <main className="relative h-screen w-screen overflow-hidden">
-      {/* Soft ambient backdrop */}
+      {/* Deep navy backdrop */}
       <div
-        className="pointer-events-none absolute inset-0 -z-10"
+        className="pointer-events-none absolute inset-0 -z-20"
         style={{
           background:
-            "radial-gradient(ellipse at 50% 40%, oklch(0.32 0.13 255 / 0.7), transparent 65%), radial-gradient(ellipse at 80% 90%, oklch(0.18 0.08 260 / 0.9), transparent 60%), linear-gradient(180deg, oklch(0.12 0.05 260), oklch(0.07 0.04 265))",
+            "radial-gradient(ellipse at 50% 30%, oklch(0.28 0.12 255 / 0.9), transparent 65%), linear-gradient(180deg, oklch(0.1 0.05 260), oklch(0.06 0.03 265))",
         }}
         aria-hidden
       />
 
+      {/* Lumi's face — full-screen living wallpaper */}
+      <LumiFace expression={pipeline.snapshot.expression} />
+
       {/* Top bar — hamburger only by default */}
-      <header className="absolute inset-x-0 top-5 z-20 flex items-center justify-between px-5">
+      <header className="absolute inset-x-0 top-5 z-30 flex items-center justify-between px-5">
         <button
           type="button"
           onClick={() => setSidebarOpen(true)}
@@ -101,44 +107,35 @@ function LumiHome() {
         onDelete={(id) => conversations.deleteConversation(id)}
       />
 
-      {/* Lumi's face — the centerpiece */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <LumiFace expression={pipeline.snapshot.expression} />
-      </div>
-
-      {/* Floating message bubbles */}
-      <ChatOverlay
-        open={chatOpen}
+      {/* Messenger-style conversation, overlayed on top of the face */}
+      <MessengerChat
         messages={pipeline.messages}
-        onSend={(t) => void pipeline.sendText(t)}
-        onClose={() => setChatOpen(false)}
         interimTranscript={pipeline.interimTranscript}
+        listening={isListening}
       />
 
-      {/* Status + controls */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-32 z-20 flex justify-center">
+      {/* Floating status above the composer */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-24 z-20 flex justify-center">
         <StatusIndicator state={pipeline.snapshot.state} />
       </div>
 
-      <VoiceOverlay
-        micActive={voice.isListening && voice.permission === "granted"}
-        muted={voice.isMuted || voice.permission !== "granted"}
-        onToggleMute={() => {
-          if (voice.permission !== "granted") void voice.requestMic();
-          else voice.toggleMute();
-        }}
-        onOpenChat={() => setChatOpen((v) => !v)}
-        onOpenSettings={() => setChatOpen(false)}
-      />
-
-      {/* Mic-permission gentle hint */}
-      {voice.permission === "denied" && (
-        <div className="pointer-events-none absolute inset-x-0 bottom-6 z-20 flex justify-center px-6">
-          <p className="glass-pill px-4 py-1.5 text-xs text-foreground/70">
-            Lumi cần quyền micro để có thể lắng nghe bạn. Bạn có thể gõ chữ nếu muốn.
+      {/* Error / hint pill */}
+      {pipeline.snapshot.error && (
+        <div className="pointer-events-none absolute inset-x-0 bottom-20 z-20 flex justify-center px-6">
+          <p className="glass-pill px-4 py-1.5 text-xs text-foreground/85">
+            {pipeline.snapshot.error}
           </p>
         </div>
       )}
+
+      {/* Bottom composer — always visible */}
+      <ChatComposer
+        onSend={(t) => void pipeline.sendText(t)}
+        micActive={micActive}
+        muted={voice.isMuted || voice.permission !== "granted"}
+        onToggleMic={() => void handleToggleMic()}
+        listening={isListening}
+      />
     </main>
   );
 }
