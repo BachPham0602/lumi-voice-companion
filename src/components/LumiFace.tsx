@@ -337,7 +337,7 @@ function AngerMark({ x, y, scale = 1 }: { x: number; y: number; scale?: number }
         className="lumi-anger-pulse-wrap"
         style={{
           transformOrigin: "0px 0px",
-          animation: "lumi-anger-pulse 1.6s ease-in-out infinite",
+          /* animation disabled for SVG transform compatibility */
         }}
       >
         <path d="M -22 0 Q -10 6 0 0 Q 10 -6 22 0" stroke={stroke} strokeWidth={5} strokeLinecap="round" fill="none" />
