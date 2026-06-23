@@ -56,23 +56,25 @@ export function LumiFace({ expression }: LumiFaceProps) {
   const brows = browPathsFor(expression);
   const showAnger = expression !== "happy" && expression !== "excited";
 
-  // SVG canvas — wide so the features can spread out like the reference.
-  // viewBox: 800 x 600. Eyes centered around y=290, large.
+  // Full-screen wallpaper face. viewBox is tall so the eyes sit in the upper
+  // third and the mouth stays around 55% of the height — always above the
+  // chat composer fixed at the bottom of the viewport.
   return (
-    <div className="relative flex h-full w-full items-center justify-center">
+    <div className="absolute inset-0 h-full w-full">
       {/* Soft ambient halo behind the face */}
       <div
-        className="pointer-events-none absolute inset-0 -z-10"
+        className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse 70% 60% at 50% 50%, oklch(0.4 0.18 250 / 0.3), transparent 75%)",
+            "radial-gradient(ellipse 70% 55% at 50% 38%, oklch(0.45 0.18 250 / 0.45), transparent 70%)",
         }}
         aria-hidden
       />
-      <div className="lumi-breathe relative w-full">
+      <div className="lumi-breathe absolute inset-0">
         <svg
-          viewBox="0 0 800 600"
-          className="mx-auto block h-[94vh] w-full max-w-[1300px] drop-shadow-[0_30px_90px_rgba(80,140,255,0.45)]"
+          viewBox="0 0 800 1000"
+          preserveAspectRatio="xMidYMid slice"
+          className="block h-full w-full drop-shadow-[0_30px_90px_rgba(80,140,255,0.35)]"
           role="img"
           aria-label={`Lumi — ${expression}`}
         >
@@ -102,10 +104,10 @@ export function LumiFace({ expression }: LumiFaceProps) {
 
             {/* Eye shape clipping paths for glossy highlight inside the eye */}
             <clipPath id="eye-clip-left">
-              <path d={eyePath(260, 290, eyeShape)} />
+              <path d={eyePath(250, 360, eyeShape)} />
             </clipPath>
             <clipPath id="eye-clip-right">
-              <path d={eyePath(540, 290, eyeShape)} />
+              <path d={eyePath(550, 360, eyeShape)} />
             </clipPath>
           </defs>
 
@@ -116,8 +118,8 @@ export function LumiFace({ expression }: LumiFaceProps) {
               transition: "transform 1.2s cubic-bezier(0.4, 0, 0.2, 1)",
             }}
           >
-            <Eye cx={260} cy={290} shape={eyeShape} side="left" />
-            <Eye cx={540} cy={290} shape={eyeShape} side="right" />
+            <Eye cx={250} cy={360} shape={eyeShape} side="left" />
+            <Eye cx={550} cy={360} shape={eyeShape} side="right" />
           </g>
 
           {/* ===== EYEBROWS ===== */}
@@ -126,7 +128,7 @@ export function LumiFace({ expression }: LumiFaceProps) {
               key={i}
               d={b}
               stroke="oklch(0.97 0.02 240)"
-              strokeWidth={9}
+              strokeWidth={11}
               strokeLinecap="round"
               fill="none"
               filter="url(#outline-glow)"
@@ -138,14 +140,14 @@ export function LumiFace({ expression }: LumiFaceProps) {
           <path
             d={mouth}
             stroke="oklch(0.97 0.02 240)"
-            strokeWidth={12}
+            strokeWidth={14}
             strokeLinecap="round"
             fill="none"
             filter="url(#outline-glow)"
           />
 
           {/* ===== ANGER / EMOTION MARK ===== */}
-          {showAnger && <AngerMark x={680} y={140} scale={1.6} />}
+          {showAnger && <AngerMark x={690} y={210} scale={1.8} />}
         </svg>
       </div>
     </div>
@@ -279,49 +281,48 @@ function eyeShapeFor(expression: LumiExpression, blink: boolean): EyeShape {
  * slope inward (concerned/angry). Other expressions use softer curves.
  */
 function browPathsFor(expression: LumiExpression): [string, string] {
-  // baseline y for brows (just above the eyes)
+  // baseline y for brows (just above the eyes at y=360)
   switch (expression) {
     case "concerned":
     case "sad":
-      // inner ends raised → worried look
-      return ["M 180 165 Q 260 130 330 160", "M 470 160 Q 540 130 620 165"];
+      return ["M 170 235 Q 250 200 330 230", "M 470 230 Q 550 200 630 235"];
     case "confused":
-      return ["M 180 160 Q 260 140 330 170", "M 470 170 Q 540 140 620 160"];
+      return ["M 170 230 Q 250 210 330 240", "M 470 240 Q 550 210 630 230"];
     case "happy":
     case "excited":
-      return ["M 185 170 Q 260 140 325 170", "M 475 170 Q 540 140 615 170"];
+      return ["M 175 240 Q 250 210 325 240", "M 475 240 Q 550 210 625 240"];
     case "thinking":
-      return ["M 185 170 Q 260 155 325 168", "M 475 168 Q 540 155 615 170"];
+      return ["M 175 240 Q 250 225 325 238", "M 475 238 Q 550 225 625 240"];
     case "sleepy":
-      return ["M 185 185 Q 260 178 325 185", "M 475 185 Q 540 178 615 185"];
+      return ["M 175 255 Q 250 248 325 255", "M 475 255 Q 550 248 625 255"];
     default:
-      return ["M 180 165 Q 260 135 330 162", "M 470 162 Q 540 135 620 165"];
+      return ["M 170 235 Q 250 205 330 232", "M 470 232 Q 550 205 630 235"];
   }
 }
 
 function mouthPathFor(expression: LumiExpression): string {
-  // Mouth centered around (400, 470)
+  // Mouth centered around (400, 540) — keeps it above the bottom composer.
   switch (expression) {
     case "happy":
-      return "M 350 460 Q 400 510 450 460";
+      return "M 340 530 Q 400 590 460 530";
     case "excited":
-      return "M 340 455 Q 400 520 460 455";
+      return "M 330 525 Q 400 600 470 525";
     case "sad":
-      return "M 350 485 Q 400 445 450 485";
+      return "M 340 560 Q 400 510 460 560";
     case "concerned":
-      return "M 365 470 Q 400 498 435 470";
+      return "M 355 540 Q 400 575 445 540";
     case "speaking":
-      return "M 365 465 Q 400 490 435 465 Q 400 455 365 465 Z";
+      return "M 355 535 Q 400 570 445 535 Q 400 520 355 535 Z";
     case "thinking":
-      return "M 370 470 Q 400 465 430 470";
+      return "M 360 540 Q 400 535 440 540";
     case "sleepy":
-      return "M 370 470 Q 400 478 430 470";
+      return "M 360 540 Q 400 552 440 540";
     case "confused":
-      return "M 365 472 Q 385 462 405 478 Q 420 466 435 470";
+      return "M 355 545 Q 380 530 405 555 Q 425 540 445 545";
     case "listening":
-      return "M 365 468 Q 400 478 435 468";
+      return "M 355 540 Q 400 552 445 540";
     default:
-      return "M 365 470 Q 400 495 435 470";
+      return "M 355 540 Q 400 568 445 540";
   }
 }
 
