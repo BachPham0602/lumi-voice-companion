@@ -1,13 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { Menu } from "lucide-react";
 
 import { LumiFace } from "@/components/LumiFace";
 import { VoiceOverlay } from "@/components/VoiceOverlay";
 import { ChatOverlay } from "@/components/ChatOverlay";
 import { StatusIndicator } from "@/components/StatusIndicator";
 import { EmotionIndicator } from "@/components/EmotionIndicator";
+import { ConversationSidebar } from "@/components/ConversationSidebar";
 import { useLumiPipeline } from "@/hooks/useLumiPipeline";
 import { useVoiceState } from "@/hooks/useVoiceState";
+import { useConversations } from "@/store/conversations";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -30,9 +33,13 @@ export const Route = createFileRoute("/")({
 });
 
 function LumiHome() {
-  const pipeline = useLumiPipeline();
+  const conversations = useConversations();
+  const pipeline = useLumiPipeline({
+    onMessage: (m) => conversations.appendMessage(m),
+  });
   const voice = useVoiceState();
   const [chatOpen, setChatOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Ask for microphone permission on first load
   useEffect(() => {
@@ -62,20 +69,39 @@ function LumiHome() {
         className="pointer-events-none absolute inset-0 -z-10"
         style={{
           background:
-            "radial-gradient(ellipse at 30% 20%, oklch(0.96 0.06 80 / 0.9), transparent 55%), radial-gradient(ellipse at 75% 80%, oklch(0.84 0.1 40 / 0.6), transparent 60%)",
+            "radial-gradient(ellipse at 30% 20%, oklch(0.55 0.18 250 / 0.55), transparent 55%), radial-gradient(ellipse at 75% 85%, oklch(0.32 0.1 260 / 0.85), transparent 60%), linear-gradient(180deg, oklch(0.22 0.06 255), oklch(0.16 0.06 260))",
         }}
         aria-hidden
       />
 
-      {/* Top bar */}
-      <header className="absolute inset-x-0 top-6 z-20 flex items-center justify-between px-6">
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-semibold tracking-[0.3em] text-foreground/60">
-            LUMI
-          </span>
-        </div>
+      {/* Top bar — hamburger only by default */}
+      <header className="absolute inset-x-0 top-5 z-20 flex items-center justify-between px-5">
+        <button
+          type="button"
+          onClick={() => setSidebarOpen(true)}
+          aria-label="Mở danh sách hội thoại"
+          className="glass-button h-11 w-11"
+        >
+          <Menu className="h-5 w-5" />
+        </button>
         <EmotionIndicator emotion={pipeline.snapshot.lastUserEmotion} />
       </header>
+
+      <ConversationSidebar
+        open={sidebarOpen}
+        conversations={conversations.conversations}
+        activeId={conversations.activeId}
+        onClose={() => setSidebarOpen(false)}
+        onNew={() => {
+          conversations.startNewConversation();
+          pipeline.resetMessages();
+        }}
+        onSelect={(id) => {
+          const msgs = conversations.selectConversation(id);
+          pipeline.loadMessages(msgs);
+        }}
+        onDelete={(id) => conversations.deleteConversation(id)}
+      />
 
       {/* Lumi's face — the centerpiece */}
       <div className="absolute inset-0 flex items-center justify-center">
