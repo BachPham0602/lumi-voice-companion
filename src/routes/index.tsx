@@ -112,7 +112,7 @@ function LumiHome() {
       <MessengerChat
         messages={pipeline.messages}
         interimTranscript={pipeline.interimTranscript}
-        listening={isListening}
+        listening={stt.isListening}
       />
 
       {/* Floating status above the composer */}
