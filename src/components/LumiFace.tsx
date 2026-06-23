@@ -146,6 +146,7 @@ export function LumiFace({ expression }: LumiFaceProps) {
             fill="none"
             filter="url(#outline-glow)"
           />
+          </g>
         </svg>
       </div>
     </div>
