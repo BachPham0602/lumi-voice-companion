@@ -73,7 +73,7 @@ export function LumiFace({ expression }: LumiFaceProps) {
       <div className="lumi-breathe absolute inset-0">
         <svg
           viewBox="0 0 800 1000"
-          preserveAspectRatio="xMidYMid slice"
+          preserveAspectRatio="xMidYMid meet"
           className="block h-full w-full drop-shadow-[0_30px_90px_rgba(80,140,255,0.35)]"
           role="img"
           aria-label={`Lumi — ${expression}`}
