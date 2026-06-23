@@ -330,16 +330,17 @@ function mouthPathFor(expression: LumiExpression): string {
  * ============================================================ */
 
 function AngerMark({ x, y, scale = 1 }: { x: number; y: number; scale?: number }) {
-  const stroke = "oklch(0.62 0.22 25)";
+  const stroke = "oklch(0.65 0.25 25)";
   return (
-    <g
-      transform={`translate(${x}, ${y}) scale(${scale})`}
-      filter="url(#outline-glow)"
-      style={{
-        transformOrigin: `${x}px ${y}px`,
-        animation: "lumi-anger-pulse 1.6s ease-in-out infinite",
-      }}
-    >
+    <g transform={`translate(${x}, ${y})`} filter="url(#outline-glow)">
+      <g
+        style={{
+          transformOrigin: "center",
+          transformBox: "fill-box",
+          animation: "lumi-anger-pulse 1.6s ease-in-out infinite",
+        }}
+        transform={`scale(${scale})`}
+      >
       <path
         d="M -22 0 Q -10 6 0 0 Q 10 -6 22 0"
         stroke={stroke}
@@ -368,6 +369,7 @@ function AngerMark({ x, y, scale = 1 }: { x: number; y: number; scale?: number }
         strokeLinecap="round"
         fill="none"
       />
+      </g>
     </g>
   );
 }
