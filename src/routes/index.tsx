@@ -24,8 +24,7 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "Lumi – Ánh sáng đồng hành" },
       {
         property: "og:description",
-        content:
-          "Một người bạn AI đồng hành bằng giọng nói, dành cho những ai sống một mình.",
+        content: "Một người bạn AI đồng hành bằng giọng nói, dành cho những ai sống một mình.",
       },
     ],
   }),
@@ -55,12 +54,11 @@ function LumiHome() {
       return;
     }
     pipeline.setMuted(false);
-    if (voice.permission === "granted" && voice.isListening) {
+    if (voice.permission === "granted" && voice.isListening && pipeline.snapshot.state === "idle") {
       pipeline.setListening(true);
     }
-    // pipeline functions are stable enough for this demo
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [voice.isMuted, voice.permission, voice.isListening]);
+  }, [voice.isMuted, voice.permission, voice.isListening, pipeline.snapshot.state]);
 
   return (
     <main className="relative h-screen w-screen overflow-hidden">
@@ -114,6 +112,7 @@ function LumiHome() {
         messages={pipeline.messages}
         onSend={(t) => void pipeline.sendText(t)}
         onClose={() => setChatOpen(false)}
+        interimTranscript={pipeline.interimTranscript}
       />
 
       {/* Status + controls */}
@@ -136,8 +135,7 @@ function LumiHome() {
       {voice.permission === "denied" && (
         <div className="pointer-events-none absolute inset-x-0 bottom-6 z-20 flex justify-center px-6">
           <p className="glass-pill px-4 py-1.5 text-xs text-foreground/70">
-            Lumi cần quyền micro để có thể lắng nghe bạn. Bạn có thể gõ chữ nếu
-            muốn.
+            Lumi cần quyền micro để có thể lắng nghe bạn. Bạn có thể gõ chữ nếu muốn.
           </p>
         </div>
       )}

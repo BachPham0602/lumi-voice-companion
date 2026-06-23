@@ -182,8 +182,7 @@ export function useConversations(): UseConversationsResult {
     }));
   }, []);
 
-  const activeMessages =
-    state.conversations.find((c) => c.id === state.activeId)?.messages ?? [];
+  const activeMessages = state.conversations.find((c) => c.id === state.activeId)?.messages ?? [];
 
   return {
     conversations: state.conversations,

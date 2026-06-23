@@ -93,9 +93,7 @@ export function ConversationSidebar({
                   <li key={conv.id}>
                     <div
                       className={`group relative flex items-start gap-2 rounded-xl px-3 py-2 transition ${
-                        conv.id === activeId
-                          ? "bg-sidebar-accent"
-                          : "hover:bg-sidebar-accent/60"
+                        conv.id === activeId ? "bg-sidebar-accent" : "hover:bg-sidebar-accent/60"
                       }`}
                     >
                       <button

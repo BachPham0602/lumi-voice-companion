@@ -7,9 +7,16 @@ interface ChatOverlayProps {
   messages: ChatMessage[];
   onSend: (text: string) => void;
   onClose: () => void;
+  interimTranscript?: string;
 }
 
-export function ChatOverlay({ open, messages, onSend, onClose }: ChatOverlayProps) {
+export function ChatOverlay({
+  open,
+  messages,
+  onSend,
+  onClose,
+  interimTranscript,
+}: ChatOverlayProps) {
   const [value, setValue] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -28,7 +35,15 @@ export function ChatOverlay({ open, messages, onSend, onClose }: ChatOverlayProp
     setValue("");
   };
 
-  const recent = messages.slice(-4);
+  const recent = [...messages.slice(-4)];
+  if (interimTranscript) {
+    recent.push({
+      id: "interim-transcript",
+      role: "user",
+      content: interimTranscript,
+      timestamp: Date.now(),
+    });
+  }
 
   return (
     <>
@@ -38,9 +53,7 @@ export function ChatOverlay({ open, messages, onSend, onClose }: ChatOverlayProp
           <div
             key={m.id}
             className={`glass-bubble max-w-md animate-fade-in text-sm ${
-              m.role === "user"
-                ? "text-foreground/85"
-                : "text-foreground"
+              m.role === "user" ? "text-foreground/85" : "text-foreground"
             }`}
           >
             {m.content}
@@ -66,10 +79,7 @@ export function ChatOverlay({ open, messages, onSend, onClose }: ChatOverlayProp
               </button>
             </div>
 
-            <div
-              ref={scrollRef}
-              className="mb-3 max-h-48 space-y-2 overflow-y-auto pr-1"
-            >
+            <div ref={scrollRef} className="mb-3 max-h-48 space-y-2 overflow-y-auto pr-1">
               {messages.length === 0 && (
                 <p className="text-sm text-muted-foreground">
                   Bạn có thể gõ vài chữ, Lumi vẫn luôn lắng nghe.
@@ -82,9 +92,7 @@ export function ChatOverlay({ open, messages, onSend, onClose }: ChatOverlayProp
                 >
                   <div
                     className={`glass-bubble max-w-[80%] text-sm ${
-                      m.role === "user"
-                        ? "bg-primary/15 text-foreground"
-                        : "text-foreground"
+                      m.role === "user" ? "bg-primary/15 text-foreground" : "text-foreground"
                     }`}
                   >
                     {m.content}

@@ -38,9 +38,7 @@ export function StatusIndicator({ state }: StatusIndicatorProps) {
               : "bg-primary"
         }`}
       >
-        {isActive && (
-          <span className="absolute inset-0 animate-ping rounded-full bg-primary/60" />
-        )}
+        {isActive && <span className="absolute inset-0 animate-ping rounded-full bg-primary/60" />}
       </span>
       <span className="tracking-wide">{LABELS[state]}</span>
     </div>

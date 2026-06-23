@@ -213,7 +213,8 @@
 }
 
 @keyframes lumi-breathe {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1) translateY(0);
   }
   50% {
@@ -222,7 +223,8 @@
 }
 
 @keyframes lumi-anger-pulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
     opacity: 0.85;
   }
@@ -230,4 +232,20 @@
     transform: scale(1.15);
     opacity: 1;
   }
+}
+
+/* Hide Lovable development/preview badge globally */
+gpt-engineer-badge,
+lovable-badge,
+#gpt-engineer-badge,
+#lovable-badge,
+.lovable-badge,
+[id*="lovable-badge"],
+[class*="lovable-badge"],
+[id*="gpt-engineer"],
+iframe[src*="lovable.dev"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }

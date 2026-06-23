@@ -54,10 +54,7 @@ export function LumiFace({ expression }: LumiFaceProps) {
   const eyeShape = eyeShapeFor(expression, blink);
   const mouth = mouthPathFor(expression);
   const brows = browPathsFor(expression);
-  const showAnger =
-    expression === "concerned" ||
-    expression === "sad" ||
-    expression === "confused";
+  const showAnger = expression === "concerned" || expression === "sad" || expression === "confused";
 
   // SVG canvas — wide so the features can spread out like the reference.
   // viewBox: 800 x 600. Eyes centered around y=290, large.
@@ -75,7 +72,7 @@ export function LumiFace({ expression }: LumiFaceProps) {
       <div className="lumi-breathe relative w-full">
         <svg
           viewBox="0 0 800 600"
-          className="mx-auto block h-[88vh] w-full max-w-[1100px] drop-shadow-[0_30px_90px_rgba(80,140,255,0.45)]"
+          className="mx-auto block h-[94vh] w-full max-w-[1300px] drop-shadow-[0_30px_90px_rgba(80,140,255,0.45)]"
           role="img"
           aria-label={`Lumi — ${expression}`}
         >
@@ -92,13 +89,7 @@ export function LumiFace({ expression }: LumiFaceProps) {
               <stop offset="60%" stopColor="oklch(0.85 0.12 240 / 0)" />
             </radialGradient>
             {/* Outline glow filter */}
-            <filter
-              id="outline-glow"
-              x="-30%"
-              y="-30%"
-              width="160%"
-              height="160%"
-            >
+            <filter id="outline-glow" x="-30%" y="-30%" width="160%" height="160%">
               <feGaussianBlur stdDeviation="3" result="b" />
               <feMerge>
                 <feMergeNode in="b" />
@@ -246,29 +237,12 @@ function Eye({
       <g clipPath={`url(#${clipId})`}>
         <ellipse cx={cx} cy={cy + 50} rx={70} ry={50} fill="url(#eye-rim)" />
         {/* subtle internal shadow rim */}
-        <ellipse
-          cx={cx}
-          cy={cy + 15}
-          rx={48}
-          ry={10}
-          fill="oklch(1 0 0 / 0.15)"
-        />
+        <ellipse cx={cx} cy={cy + 15} rx={48} ry={10} fill="oklch(1 0 0 / 0.15)" />
       </g>
       {/* big glossy pupil highlight (the reference's white drop shape) */}
-      <ellipse
-        cx={pupilCx}
-        cy={pupilCy}
-        rx={28}
-        ry={36}
-        fill="oklch(1 0 0)"
-      />
+      <ellipse cx={pupilCx} cy={pupilCy} rx={28} ry={36} fill="oklch(1 0 0)" />
       {/* small secondary sparkle */}
-      <circle
-        cx={pupilCx + 18}
-        cy={pupilCy + 14}
-        r={6}
-        fill="oklch(1 0 0 / 0.9)"
-      />
+      <circle cx={pupilCx + 18} cy={pupilCy + 14} r={6} fill="oklch(1 0 0 / 0.9)" />
     </g>
   );
 }
@@ -310,36 +284,18 @@ function browPathsFor(expression: LumiExpression): [string, string] {
     case "concerned":
     case "sad":
       // inner ends raised → worried look
-      return [
-        "M 195 220 Q 260 195 325 215",
-        "M 475 215 Q 540 195 605 220",
-      ];
+      return ["M 195 220 Q 260 195 325 215", "M 475 215 Q 540 195 605 220"];
     case "confused":
-      return [
-        "M 195 215 Q 260 200 325 220",
-        "M 475 225 Q 540 205 605 215",
-      ];
+      return ["M 195 215 Q 260 200 325 220", "M 475 225 Q 540 205 605 215"];
     case "happy":
     case "excited":
-      return [
-        "M 200 215 Q 260 195 320 215",
-        "M 480 215 Q 540 195 600 215",
-      ];
+      return ["M 200 215 Q 260 195 320 215", "M 480 215 Q 540 195 600 215"];
     case "thinking":
-      return [
-        "M 200 220 Q 260 210 325 218",
-        "M 475 218 Q 540 210 600 220",
-      ];
+      return ["M 200 220 Q 260 210 325 218", "M 475 218 Q 540 210 600 220"];
     case "sleepy":
-      return [
-        "M 200 230 Q 260 225 325 232",
-        "M 475 232 Q 540 225 600 230",
-      ];
+      return ["M 200 230 Q 260 225 325 232", "M 475 232 Q 540 225 600 230"];
     default:
-      return [
-        "M 200 220 Q 260 205 325 218",
-        "M 475 218 Q 540 205 600 220",
-      ];
+      return ["M 200 220 Q 260 205 325 218", "M 475 218 Q 540 205 600 220"];
   }
 }
 

@@ -14,13 +14,7 @@ export type LumiExpression =
   | "excited"
   | "confused";
 
-export type UserEmotion =
-  | "happy"
-  | "sad"
-  | "lonely"
-  | "stressed"
-  | "tired"
-  | "neutral";
+export type UserEmotion = "happy" | "sad" | "lonely" | "stressed" | "tired" | "neutral";
 
 export interface EmotionReading {
   emotion: UserEmotion;

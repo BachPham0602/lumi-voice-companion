@@ -11,13 +11,13 @@ import type { PipelineState } from "@/types/pipeline";
 import type { SpeakerProfile } from "@/types/speaker";
 import type { EmotionReading } from "@/types/emotion";
 
-import { mockAddresseeDetector } from "./wakeWordFree/addresseeDetection";
-import { mockSemanticVAD } from "./turnTaking/semanticVAD";
-import { mockVietnameseASR } from "./asr/vietnameseASR";
-import { mockSpeakerVerifier } from "./speaker/speakerVerification";
-import { mockEmotionRecognizer } from "./emotion/emotionRecognition";
-import { mockEmpatheticLLM } from "./llm/empatheticResponse";
-import { mockVietnameseTTS } from "./tts/vietnameseTTS";
+import { mockAddresseeDetector } from "./addresseeDetection";
+import { mockSemanticVAD } from "./semanticVAD";
+import { mockVietnameseASR } from "./vietnameseASR";
+import { mockSpeakerVerifier } from "./speakerVerification";
+import { mockEmotionRecognizer } from "./emotionRecognition";
+import { mockEmpatheticLLM } from "./empatheticResponse";
+import { mockVietnameseTTS } from "./vietnameseTTS";
 
 export interface PipelineDependencies {
   addressee: typeof mockAddresseeDetector;
