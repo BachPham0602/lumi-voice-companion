@@ -36,7 +36,7 @@ const FALLBACKS: Record<UserEmotion, string> = {
   lonely: "Có mình bên cạnh rồi. Mình lắng nghe bạn nè.",
   stressed: "Hít thở một hơi sâu nha. Mình ở đây, mọi chuyện sẽ ổn thôi.",
   tired: "Bạn nghỉ một chút đi. Mình sẽ ở đây khi bạn quay lại.",
-  neutral: "Mình đang nghe đây. Bạn muốn kể mình nghe điều gì không?",
+  neutral: "Mình vẫn đang ở đây với bạn. Bạn muốn chia sẻ thêm điều gì không?",
 };
 
 /** Mock empathetic LLM — picks a warm Vietnamese phrase by detected emotion. */
