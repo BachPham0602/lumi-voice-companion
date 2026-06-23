@@ -322,26 +322,3 @@ function mouthPathFor(expression: LumiExpression): string {
   }
 }
 
-/* ============================================================
- * ANGER MARK — the small red "stress" cross from the reference
- * ============================================================ */
-
-function AngerMark({ x, y, scale = 1 }: { x: number; y: number; scale?: number }) {
-  const stroke = "oklch(0.68 0.26 25)";
-  return (
-    <g transform={`translate(${x} ${y}) scale(${scale})`}>
-      <g
-        className="lumi-anger-pulse-wrap"
-        style={{
-          transformOrigin: "0px 0px",
-          /* animation disabled for SVG transform compatibility */
-        }}
-      >
-        <path d="M -22 0 Q -10 6 0 0 Q 10 -6 22 0" stroke={stroke} strokeWidth={5} strokeLinecap="round" fill="none" />
-        <path d="M 0 -22 Q 6 -10 0 0 Q -6 10 0 22" stroke={stroke} strokeWidth={5} strokeLinecap="round" fill="none" />
-        <path d="M -16 -16 Q -8 -8 0 -2" stroke={stroke} strokeWidth={5} strokeLinecap="round" fill="none" />
-        <path d="M 16 16 Q 8 8 2 2" stroke={stroke} strokeWidth={5} strokeLinecap="round" fill="none" />
-      </g>
-    </g>
-  );
-}
