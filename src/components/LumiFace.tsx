@@ -54,7 +54,6 @@ export function LumiFace({ expression }: LumiFaceProps) {
   const eyeShape = eyeShapeFor(expression, blink);
   const mouth = mouthPathFor(expression);
   const brows = browPathsFor(expression);
-  const showAnger = expression !== "happy" && expression !== "excited";
 
   // Full-screen wallpaper face. viewBox is tall so the eyes sit in the upper
   // third and the mouth stays around 55% of the height — always above the
@@ -145,9 +144,6 @@ export function LumiFace({ expression }: LumiFaceProps) {
             fill="none"
             filter="url(#outline-glow)"
           />
-
-          {/* ===== ANGER / EMOTION MARK ===== */}
-          {showAnger && <AngerMark x={690} y={210} scale={1.8} />}
         </svg>
       </div>
     </div>

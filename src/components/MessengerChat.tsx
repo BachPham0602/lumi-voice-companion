@@ -15,28 +15,54 @@ interface MessengerChatProps {
  * stays visible behind it; bubbles use glassmorphism with low opacity.
  */
 export function MessengerChat({ messages, interimTranscript, listening }: MessengerChatProps) {
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const leftRef = useRef<HTMLDivElement>(null);
+  const rightRef = useRef<HTMLDivElement>(null);
+
+  const showInterim = !!(listening && interimTranscript && interimTranscript.trim().length > 0);
+
+  const lumiMessages = messages.filter((m) => m.role === "lumi");
+  const userMessages = messages.filter((m) => m.role === "user");
 
   useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+    leftRef.current?.scrollTo({ top: leftRef.current.scrollHeight, behavior: "smooth" });
+    rightRef.current?.scrollTo({ top: rightRef.current.scrollHeight, behavior: "smooth" });
   }, [messages.length, interimTranscript]);
 
-  const showInterim = listening && interimTranscript && interimTranscript.trim().length > 0;
-
   return (
-    <div
-      ref={scrollRef}
-      className="pointer-events-auto absolute left-0 right-0 z-10 mx-auto flex w-full max-w-2xl flex-col gap-2 overflow-y-auto px-4 pb-4"
-      style={{ bottom: "120px", maxHeight: "40vh" }}
-    >
-      {messages.map((m) => (
-        <Bubble key={m.id} role={m.role} content={m.content} />
-      ))}
+    <>
+      {/* Lumi column — left edge */}
+      <div
+        ref={leftRef}
+        className="scrollbar-hide pointer-events-auto absolute z-10 flex flex-col gap-2 overflow-y-auto"
+        style={{
+          left: "16px",
+          bottom: "120px",
+          maxHeight: "55vh",
+          width: "min(40vw, 360px)",
+        }}
+      >
+        {lumiMessages.map((m) => (
+          <Bubble key={m.id} role="lumi" content={m.content} />
+        ))}
+      </div>
 
-      {showInterim && <Bubble role="user" content={interimTranscript!} interim />}
-    </div>
+      {/* User column — right edge */}
+      <div
+        ref={rightRef}
+        className="scrollbar-hide pointer-events-auto absolute z-10 flex flex-col items-end gap-2 overflow-y-auto"
+        style={{
+          right: "16px",
+          bottom: "120px",
+          maxHeight: "55vh",
+          width: "min(40vw, 360px)",
+        }}
+      >
+        {userMessages.map((m) => (
+          <Bubble key={m.id} role="user" content={m.content} />
+        ))}
+        {showInterim && <Bubble role="user" content={interimTranscript!} interim />}
+      </div>
+    </>
   );
 }
 

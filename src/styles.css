@@ -223,6 +223,14 @@
   animation: lumi-breathe 5s ease-in-out infinite;
 }
 
+@utility scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 @keyframes lumi-breathe {
   0%,
   100% {
