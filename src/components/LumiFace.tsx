@@ -295,7 +295,7 @@ function browPathsFor(expression: LumiExpression): [string, string] {
     case "sleepy":
       return ["M 185 185 Q 260 178 325 185", "M 475 185 Q 540 178 615 185"];
     default:
-      return ["M 185 170 Q 260 145 325 168", "M 475 168 Q 540 145 615 170"];
+      return ["M 180 165 Q 260 135 330 162", "M 470 162 Q 540 135 620 165"];
   }
 }
 
@@ -322,7 +322,7 @@ function mouthPathFor(expression: LumiExpression): string {
     case "listening":
       return "M 365 468 Q 400 478 435 468";
     default:
-      return "M 370 470 Q 400 478 430 470";
+      return "M 365 475 Q 400 458 435 475";
   }
 }
 
