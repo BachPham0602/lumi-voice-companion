@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useCallback, useState } from "react";
+import { useCallback, useState, type CSSProperties } from "react";
 import { Menu } from "lucide-react";
 
 import { LumiFace } from "@/components/LumiFace";
@@ -67,7 +67,21 @@ function LumiHome() {
   return (
     <main
       className="fixed inset-0 overflow-hidden"
-      style={{ width: "100vw", height: "100vh" }}
+      style={
+        {
+          width: "100vw",
+          height: "100dvh",
+          "--lumi-input-bottom": "max(16px, env(safe-area-inset-bottom))",
+          "--lumi-input-h": "clamp(56px, 8vh, 72px)",
+          "--lumi-status-bottom":
+            "calc(var(--lumi-input-bottom) + var(--lumi-input-h) + 24px)",
+          "--lumi-status-h": "clamp(56px, 9vh, 72px)",
+          "--lumi-chat-bottom":
+            "calc(var(--lumi-status-bottom) + var(--lumi-status-h) + 16px)",
+          "--lumi-chat-max-h": "clamp(120px, 28vh, 320px)",
+          "--lumi-face-top": "clamp(56px, 9vh, 80px)",
+        } as CSSProperties
+      }
     >
       {/* Deep navy backdrop */}
       <div
@@ -80,10 +94,15 @@ function LumiHome() {
         aria-hidden
       />
 
-      {/* Lumi's face — full-screen living wallpaper */}
+      {/* Lumi's face — fills the available area between top bar and chat zone */}
       <div
-        className="pointer-events-none absolute inset-0"
-        style={{ zIndex: 0 }}
+        className="pointer-events-none absolute left-0 right-0"
+        style={{
+          zIndex: 0,
+          top: "var(--lumi-face-top)",
+          bottom:
+            "calc(var(--lumi-chat-bottom) + var(--lumi-chat-max-h) + 8px)",
+        }}
       >
         <LumiFace expression={pipeline.snapshot.expression} />
       </div>
@@ -125,23 +144,22 @@ function LumiHome() {
       />
 
       {/* Floating status above the composer */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-24 z-20 flex flex-col items-center gap-1.5">
+      <div
+        className="pointer-events-none absolute inset-x-0 z-20 flex flex-col items-center gap-1.5 px-4"
+        style={{ bottom: "var(--lumi-status-bottom)" }}
+      >
         <StatusIndicator state={pipeline.snapshot.state} />
         {statusLabel && (
           <span className="glass-pill px-3 py-1 text-[11px] uppercase tracking-[0.18em] text-foreground/75">
             {statusLabel}
           </span>
         )}
-      </div>
-
-      {/* Error / hint pill */}
-      {(stt.error || pipeline.snapshot.error) && (
-        <div className="pointer-events-none absolute inset-x-0 bottom-20 z-20 flex justify-center px-6">
-          <p className="glass-pill px-4 py-1.5 text-xs text-foreground/85">
+        {(stt.error || pipeline.snapshot.error) && (
+          <p className="glass-pill mt-1 px-4 py-1.5 text-xs text-foreground/85">
             {stt.error ?? pipeline.snapshot.error}
           </p>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Bottom composer — always visible */}
       <ChatComposer

@@ -33,13 +33,13 @@ export function ChatComposer({
   return (
     <form
       onSubmit={submit}
-      className="pointer-events-auto absolute z-20 flex items-center gap-2 rounded-full border border-white/15 bg-black/35 px-2 py-2 shadow-[0_18px_48px_-20px_rgba(0,20,60,0.7)] backdrop-blur-2xl"
+      className="pointer-events-auto absolute z-20 flex items-center gap-2 rounded-full border border-white/15 bg-black/35 px-2 shadow-[0_18px_48px_-20px_rgba(0,20,60,0.7)] backdrop-blur-2xl"
       style={{
-        bottom: "24px",
+        bottom: "var(--lumi-input-bottom, 16px)",
         left: "50%",
         transform: "translateX(-50%)",
-        width: "calc(100% - 32px)",
-        maxWidth: "720px",
+        width: "min(92vw, 760px)",
+        height: "var(--lumi-input-h, 64px)",
       }}
     >
         <input
