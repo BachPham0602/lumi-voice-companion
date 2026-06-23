@@ -65,11 +65,19 @@ function LumiHome() {
   const statusLabel = recognitionStatusLabel(stt.status);
 
   return (
-    <main className="relative h-screen w-screen overflow-hidden">
+    <main
+      className="fixed inset-0 overflow-hidden"
+      style={{ width: "100vw", height: "100vh" }}
+    >
       {/* Deep navy backdrop */}
       <div
-        className="pointer-events-none absolute inset-0 -z-20"
+        className="pointer-events-none absolute inset-0"
+        style={{ zIndex: 0 }}
+      />
+      <div
+        className="pointer-events-none absolute inset-0"
         style={{
+          zIndex: 0,
           background:
             "radial-gradient(ellipse at 50% 30%, oklch(0.28 0.12 255 / 0.9), transparent 65%), linear-gradient(180deg, oklch(0.1 0.05 260), oklch(0.06 0.03 265))",
         }}
@@ -77,7 +85,12 @@ function LumiHome() {
       />
 
       {/* Lumi's face — full-screen living wallpaper */}
-      <LumiFace expression={pipeline.snapshot.expression} />
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{ zIndex: 0 }}
+      >
+        <LumiFace expression={pipeline.snapshot.expression} />
+      </div>
 
       {/* Top bar — hamburger only by default */}
       <header className="absolute inset-x-0 top-5 z-30 flex items-center justify-between px-5">

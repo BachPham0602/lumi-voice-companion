@@ -37,6 +37,17 @@ function generateUUID(): string {
     : `msg_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
 }
 
+const INITIAL_GREETING = "Mình đang nghe đây. Bạn muốn kể mình nghe điều gì không?";
+
+function makeGreeting(): ChatMessage {
+  return {
+    id: generateUUID(),
+    role: "lumi",
+    content: INITIAL_GREETING,
+    timestamp: Date.now(),
+  };
+}
+
 /**
  * High-level hook that owns the Lumi pipeline state machine.
  *
@@ -47,7 +58,7 @@ function generateUUID(): string {
 export function useLumiPipeline(options: UseLumiPipelineOptions = {}): UseLumiPipelineResult {
   const { initialState = "idle", onMessage } = options;
   const [state, setState] = useState<PipelineState>(initialState);
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [messages, setMessages] = useState<ChatMessage[]>(() => [makeGreeting()]);
   const [snapshotExtras, setSnapshotExtras] = useState<{
     lastUserEmotion?: PipelineSnapshot["lastUserEmotion"];
     lastTranscript?: string;
@@ -103,9 +114,18 @@ export function useLumiPipeline(options: UseLumiPipelineOptions = {}): UseLumiPi
           content: result.response,
           timestamp: Date.now(),
         };
-        setMessages((prev) => [...prev, lumiMessage]);
-        onMessage?.(lumiMessage);
-        historyRef.current = [...historyRef.current, { role: "lumi", content: result.response }];
+        setMessages((prev) => {
+          const last = prev[prev.length - 1];
+          if (last && last.role === "lumi" && last.content === result.response) {
+            return prev;
+          }
+          return [...prev, lumiMessage];
+        });
+        const last = historyRef.current[historyRef.current.length - 1];
+        if (!(last && last.role === "lumi" && last.content === result.response)) {
+          onMessage?.(lumiMessage);
+          historyRef.current = [...historyRef.current, { role: "lumi", content: result.response }];
+        }
         setSnapshotExtras({
           lastUserEmotion: result.emotion.emotion,
           lastTranscript: result.transcript,
@@ -124,7 +144,7 @@ export function useLumiPipeline(options: UseLumiPipelineOptions = {}): UseLumiPi
   // mic button. The hook below just exposes setters for the interim text.
 
   const loadMessages = useCallback((next: ChatMessage[]) => {
-    setMessages(next);
+    setMessages(next.length > 0 ? next : [makeGreeting()]);
     historyRef.current = next.map((m) => ({
       role: m.role,
       content: m.content,
@@ -133,7 +153,7 @@ export function useLumiPipeline(options: UseLumiPipelineOptions = {}): UseLumiPi
   }, []);
 
   const resetMessages = useCallback(() => {
-    setMessages([]);
+    setMessages([makeGreeting()]);
     historyRef.current = [];
     setSnapshotExtras({});
   }, []);
