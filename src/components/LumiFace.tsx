@@ -54,7 +54,7 @@ export function LumiFace({ expression }: LumiFaceProps) {
   const eyeShape = eyeShapeFor(expression, blink);
   const mouth = mouthPathFor(expression);
   const brows = browPathsFor(expression);
-  const showAnger = expression === "concerned" || expression === "sad" || expression === "confused";
+  const showAnger = expression !== "happy" && expression !== "excited";
 
   // SVG canvas — wide so the features can spread out like the reference.
   // viewBox: 800 x 600. Eyes centered around y=290, large.
@@ -145,7 +145,7 @@ export function LumiFace({ expression }: LumiFaceProps) {
           />
 
           {/* ===== ANGER / EMOTION MARK ===== */}
-          {showAnger && <AngerMark x={690} y={120} />}
+          {showAnger && <AngerMark x={680} y={140} scale={1.6} />}
         </svg>
       </div>
     </div>
@@ -284,18 +284,18 @@ function browPathsFor(expression: LumiExpression): [string, string] {
     case "concerned":
     case "sad":
       // inner ends raised → worried look
-      return ["M 195 220 Q 260 195 325 215", "M 475 215 Q 540 195 605 220"];
+      return ["M 180 165 Q 260 130 330 160", "M 470 160 Q 540 130 620 165"];
     case "confused":
-      return ["M 195 215 Q 260 200 325 220", "M 475 225 Q 540 205 605 215"];
+      return ["M 180 160 Q 260 140 330 170", "M 470 170 Q 540 140 620 160"];
     case "happy":
     case "excited":
-      return ["M 200 215 Q 260 195 320 215", "M 480 215 Q 540 195 600 215"];
+      return ["M 185 170 Q 260 140 325 170", "M 475 170 Q 540 140 615 170"];
     case "thinking":
-      return ["M 200 220 Q 260 210 325 218", "M 475 218 Q 540 210 600 220"];
+      return ["M 185 170 Q 260 155 325 168", "M 475 168 Q 540 155 615 170"];
     case "sleepy":
-      return ["M 200 230 Q 260 225 325 232", "M 475 232 Q 540 225 600 230"];
+      return ["M 185 185 Q 260 178 325 185", "M 475 185 Q 540 178 615 185"];
     default:
-      return ["M 200 220 Q 260 205 325 218", "M 475 218 Q 540 205 600 220"];
+      return ["M 180 165 Q 260 135 330 162", "M 470 162 Q 540 135 620 165"];
   }
 }
 
@@ -309,8 +309,7 @@ function mouthPathFor(expression: LumiExpression): string {
     case "sad":
       return "M 350 485 Q 400 445 450 485";
     case "concerned":
-      // small downward arc like the reference
-      return "M 365 475 Q 400 455 435 475";
+      return "M 365 470 Q 400 498 435 470";
     case "speaking":
       return "M 365 465 Q 400 490 435 465 Q 400 455 365 465 Z";
     case "thinking":
@@ -322,7 +321,7 @@ function mouthPathFor(expression: LumiExpression): string {
     case "listening":
       return "M 365 468 Q 400 478 435 468";
     default:
-      return "M 370 470 Q 400 478 430 470";
+      return "M 365 470 Q 400 495 435 470";
   }
 }
 
@@ -330,45 +329,22 @@ function mouthPathFor(expression: LumiExpression): string {
  * ANGER MARK — the small red "stress" cross from the reference
  * ============================================================ */
 
-function AngerMark({ x, y }: { x: number; y: number }) {
-  const stroke = "oklch(0.62 0.22 25)";
+function AngerMark({ x, y, scale = 1 }: { x: number; y: number; scale?: number }) {
+  const stroke = "oklch(0.68 0.26 25)";
   return (
-    <g
-      transform={`translate(${x}, ${y})`}
-      filter="url(#outline-glow)"
-      style={{
-        transformOrigin: `${x}px ${y}px`,
-        animation: "lumi-anger-pulse 1.6s ease-in-out infinite",
-      }}
-    >
-      <path
-        d="M -22 0 Q -10 6 0 0 Q 10 -6 22 0"
-        stroke={stroke}
-        strokeWidth={5}
-        strokeLinecap="round"
-        fill="none"
-      />
-      <path
-        d="M 0 -22 Q 6 -10 0 0 Q -6 10 0 22"
-        stroke={stroke}
-        strokeWidth={5}
-        strokeLinecap="round"
-        fill="none"
-      />
-      <path
-        d="M -16 -16 Q -8 -8 0 -2"
-        stroke={stroke}
-        strokeWidth={5}
-        strokeLinecap="round"
-        fill="none"
-      />
-      <path
-        d="M 16 16 Q 8 8 2 2"
-        stroke={stroke}
-        strokeWidth={5}
-        strokeLinecap="round"
-        fill="none"
-      />
+    <g transform={`translate(${x} ${y}) scale(${scale})`}>
+      <g
+        className="lumi-anger-pulse-wrap"
+        style={{
+          transformOrigin: "0px 0px",
+          /* animation disabled for SVG transform compatibility */
+        }}
+      >
+        <path d="M -22 0 Q -10 6 0 0 Q 10 -6 22 0" stroke={stroke} strokeWidth={5} strokeLinecap="round" fill="none" />
+        <path d="M 0 -22 Q 6 -10 0 0 Q -6 10 0 22" stroke={stroke} strokeWidth={5} strokeLinecap="round" fill="none" />
+        <path d="M -16 -16 Q -8 -8 0 -2" stroke={stroke} strokeWidth={5} strokeLinecap="round" fill="none" />
+        <path d="M 16 16 Q 8 8 2 2" stroke={stroke} strokeWidth={5} strokeLinecap="round" fill="none" />
+      </g>
     </g>
   );
 }
