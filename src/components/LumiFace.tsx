@@ -284,18 +284,18 @@ function browPathsFor(expression: LumiExpression): [string, string] {
     case "concerned":
     case "sad":
       // inner ends raised → worried look
-      return ["M 195 220 Q 260 195 325 215", "M 475 215 Q 540 195 605 220"];
+      return ["M 180 165 Q 260 130 330 160", "M 470 160 Q 540 130 620 165"];
     case "confused":
-      return ["M 195 215 Q 260 200 325 220", "M 475 225 Q 540 205 605 215"];
+      return ["M 180 160 Q 260 140 330 170", "M 470 170 Q 540 140 620 160"];
     case "happy":
     case "excited":
-      return ["M 200 215 Q 260 195 320 215", "M 480 215 Q 540 195 600 215"];
+      return ["M 185 170 Q 260 140 325 170", "M 475 170 Q 540 140 615 170"];
     case "thinking":
-      return ["M 200 220 Q 260 210 325 218", "M 475 218 Q 540 210 600 220"];
+      return ["M 185 170 Q 260 155 325 168", "M 475 168 Q 540 155 615 170"];
     case "sleepy":
-      return ["M 200 230 Q 260 225 325 232", "M 475 232 Q 540 225 600 230"];
+      return ["M 185 185 Q 260 178 325 185", "M 475 185 Q 540 178 615 185"];
     default:
-      return ["M 200 220 Q 260 205 325 218", "M 475 218 Q 540 205 600 220"];
+      return ["M 185 170 Q 260 145 325 168", "M 475 168 Q 540 145 615 170"];
   }
 }
 
