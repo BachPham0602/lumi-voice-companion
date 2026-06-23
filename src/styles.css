@@ -204,8 +204,7 @@
   transition:
     transform 0.2s ease,
     background 0.2s ease;
-}
-@utility glass-button {
+
   &:hover {
     transform: translateY(-1px);
     background: oklch(1 0 0 / 0.65);
