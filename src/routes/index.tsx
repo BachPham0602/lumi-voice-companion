@@ -73,13 +73,13 @@ function LumiHome() {
           height: "100dvh",
           "--lumi-input-bottom": "max(16px, env(safe-area-inset-bottom))",
           "--lumi-input-h": "clamp(56px, 8vh, 72px)",
-          "--lumi-status-bottom":
-            "calc(var(--lumi-input-bottom) + var(--lumi-input-h) + 12px)",
+          "--lumi-status-bottom": "92px",
           "--lumi-status-h": "clamp(56px, 9vh, 72px)",
-          "--lumi-chat-bottom":
-            "calc(var(--lumi-status-bottom) + var(--lumi-status-h) + 40px)",
-          "--lumi-chat-max-h": "clamp(160px, 42vh, 420px)",
-          "--lumi-face-top": "clamp(56px, 9vh, 80px)",
+          "--lumi-chat-bottom": "130px",
+          "--lumi-chat-max-h": "clamp(220px, 36vh, 430px)",
+          "--lumi-face-top": "clamp(40px, 6vh, 72px)",
+          "--lumi-face-bottom":
+            "calc(var(--lumi-chat-bottom) + var(--lumi-chat-max-h) * 0.45)",
         } as CSSProperties
       }
     >
@@ -100,8 +100,7 @@ function LumiHome() {
         style={{
           zIndex: 0,
           top: "var(--lumi-face-top)",
-          bottom:
-            "calc(var(--lumi-chat-bottom) + var(--lumi-chat-max-h) + 8px)",
+          bottom: "var(--lumi-face-bottom)",
         }}
       >
         <LumiFace expression={pipeline.snapshot.expression} />

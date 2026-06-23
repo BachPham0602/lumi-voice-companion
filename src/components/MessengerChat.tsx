@@ -26,18 +26,18 @@ export function MessengerChat({ messages, interimTranscript, listening }: Messen
   }, [messages.length, interimTranscript]);
 
   const fadeMask =
-    "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.2) 10%, rgba(0,0,0,0.9) 24%, #000 38%, #000 100%)";
+    "linear-gradient(to bottom, transparent 0%, #000 18%, #000 88%, transparent 100%)";
 
   return (
     <div
       ref={scrollRef}
-      className="scrollbar-hide pointer-events-auto absolute z-10 flex flex-col gap-3 overflow-y-auto px-2"
+      className="scrollbar-hide pointer-events-auto absolute z-10 flex flex-col gap-[14px] overflow-y-auto px-2 pb-14 pt-8"
       style={{
         left: "50%",
         transform: "translateX(-50%)",
-        width: "min(92vw, 820px)",
-        bottom: "var(--lumi-chat-bottom, 200px)",
-        maxHeight: "var(--lumi-chat-max-h, 42vh)",
+        width: "min(88vw, 1180px)",
+        bottom: "var(--lumi-chat-bottom, 130px)",
+        height: "var(--lumi-chat-max-h, clamp(220px, 36vh, 430px))",
         WebkitMaskImage: fadeMask,
         maskImage: fadeMask,
       }}
@@ -63,7 +63,7 @@ function Bubble({
   return (
     <div className={`flex w-full ${isUser ? "justify-end" : "justify-start"}`}>
       <div
-        className={`max-w-[78%] rounded-3xl px-5 py-3 text-sm leading-relaxed shadow-[0_8px_28px_-16px_rgba(0,20,60,0.6)] backdrop-blur-xl ${
+        className={`max-w-[82%] rounded-3xl px-5 py-3 text-sm leading-relaxed shadow-[0_8px_28px_-16px_rgba(0,20,60,0.6)] backdrop-blur-xl md:max-w-[48%] ${
           isUser
             ? "bg-primary/55 text-primary-foreground rounded-br-md border border-primary/40"
             : "bg-white/10 text-foreground rounded-bl-md border border-white/15"
