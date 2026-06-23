@@ -330,45 +330,20 @@ function mouthPathFor(expression: LumiExpression): string {
  * ============================================================ */
 
 function AngerMark({ x, y, scale = 1 }: { x: number; y: number; scale?: number }) {
-  const stroke = "oklch(0.65 0.25 25)";
+  const stroke = "oklch(0.68 0.26 25)";
   return (
-    <g transform={`translate(${x}, ${y})`} filter="url(#outline-glow)">
+    <g transform={`translate(${x} ${y}) scale(${scale})`}>
       <g
+        className="lumi-anger-pulse-wrap"
         style={{
-          transformOrigin: "center",
-          transformBox: "fill-box",
+          transformOrigin: "0px 0px",
           animation: "lumi-anger-pulse 1.6s ease-in-out infinite",
         }}
-        transform={`scale(${scale})`}
       >
-      <path
-        d="M -22 0 Q -10 6 0 0 Q 10 -6 22 0"
-        stroke={stroke}
-        strokeWidth={5}
-        strokeLinecap="round"
-        fill="none"
-      />
-      <path
-        d="M 0 -22 Q 6 -10 0 0 Q -6 10 0 22"
-        stroke={stroke}
-        strokeWidth={5}
-        strokeLinecap="round"
-        fill="none"
-      />
-      <path
-        d="M -16 -16 Q -8 -8 0 -2"
-        stroke={stroke}
-        strokeWidth={5}
-        strokeLinecap="round"
-        fill="none"
-      />
-      <path
-        d="M 16 16 Q 8 8 2 2"
-        stroke={stroke}
-        strokeWidth={5}
-        strokeLinecap="round"
-        fill="none"
-      />
+        <path d="M -22 0 Q -10 6 0 0 Q 10 -6 22 0" stroke={stroke} strokeWidth={5} strokeLinecap="round" fill="none" />
+        <path d="M 0 -22 Q 6 -10 0 0 Q -6 10 0 22" stroke={stroke} strokeWidth={5} strokeLinecap="round" fill="none" />
+        <path d="M -16 -16 Q -8 -8 0 -2" stroke={stroke} strokeWidth={5} strokeLinecap="round" fill="none" />
+        <path d="M 16 16 Q 8 8 2 2" stroke={stroke} strokeWidth={5} strokeLinecap="round" fill="none" />
       </g>
     </g>
   );
