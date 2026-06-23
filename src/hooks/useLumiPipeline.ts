@@ -139,7 +139,11 @@ export function useLumiPipeline(options: UseLumiPipelineOptions = {}): UseLumiPi
       (window as any).webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
-      console.warn("SpeechRecognition is not supported in this browser.");
+      console.warn("[Lumi STT] Web Speech API is not supported in this browser.");
+      setSnapshotExtras((prev) => ({
+        ...prev,
+        error: "Trình duyệt này chưa hỗ trợ nhận diện giọng nói. Bạn có thể gõ chữ nhé.",
+      }));
       return;
     }
 
@@ -147,17 +151,28 @@ export function useLumiPipeline(options: UseLumiPipelineOptions = {}): UseLumiPi
     recognition.continuous = true;
     recognition.interimResults = true;
     recognition.lang = "vi-VN";
+    recognition.maxAlternatives = 1;
 
-    let silenceTimer: NodeJS.Timeout | null = null;
+    let silenceTimer: ReturnType<typeof setTimeout> | null = null;
     let finalResultSent = false;
     let accumulatedText = "";
+    let stopped = false;
+
+    console.log("[Lumi STT] starting recognition (vi-VN)");
 
     const commitResult = (text: string) => {
-      if (text.trim() && !finalResultSent) {
+      const trimmed = text.trim();
+      if (trimmed && !finalResultSent) {
         finalResultSent = true;
+        stopped = true;
         setInterimTranscript("");
-        sendText(text);
-        recognition.stop();
+        console.log("[Lumi STT] final transcript:", trimmed);
+        try {
+          recognition.stop();
+        } catch (e) {
+          console.warn("[Lumi STT] stop() failed", e);
+        }
+        sendText(trimmed);
       }
     };
 
@@ -167,62 +182,94 @@ export function useLumiPipeline(options: UseLumiPipelineOptions = {}): UseLumiPi
       let final = "";
 
       for (let i = 0; i < event.results.length; ++i) {
-        if (event.results[i].isFinal) {
-          final += event.results[i][0].transcript;
+        const r = event.results[i];
+        if (r.isFinal) {
+          final += r[0].transcript;
         } else {
-          interim += event.results[i][0].transcript;
+          interim += r[0].transcript;
         }
       }
 
-      accumulatedText = final;
-      setInterimTranscript(final + interim);
+      accumulatedText = (final + " " + interim).trim();
+      setInterimTranscript(accumulatedText);
+      console.log("[Lumi STT] partial:", accumulatedText);
 
       if (silenceTimer) {
         clearTimeout(silenceTimer);
       }
 
-      if (final.trim() || interim.trim()) {
+      if (accumulatedText) {
         silenceTimer = setTimeout(() => {
           commitResult(accumulatedText);
-        }, 2000); // 2 seconds silence timeout
+        }, 1500);
       }
     };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     recognition.onerror = (event: any) => {
-      console.error("Speech recognition error:", event.error);
+      console.error("[Lumi STT] error:", event.error);
       if (event.error === "not-allowed") {
+        stopped = true;
         setState("error");
         setSnapshotExtras((prev) => ({
           ...prev,
           error: "Quyền truy cập micro bị từ chối hoặc bị chặn.",
         }));
-      } else if (event.error !== "no-speech") {
+      } else if (event.error === "no-speech" || event.error === "aborted") {
+        // benign — recognizer will end and we'll restart via onend
+      } else if (event.error === "audio-capture") {
+        stopped = true;
         setState("error");
         setSnapshotExtras((prev) => ({
           ...prev,
-          error: `Lỗi nhận diện giọng nói: ${event.error}`,
+          error: "Không tìm thấy micro. Bạn kiểm tra giúp Lumi nhé.",
+        }));
+      } else {
+        setSnapshotExtras((prev) => ({
+          ...prev,
+          error: "Tôi chưa nghe rõ, bạn có thể nói lại được không?",
         }));
       }
     };
 
     recognition.onend = () => {
+      console.log("[Lumi STT] ended");
       if (silenceTimer) {
         clearTimeout(silenceTimer);
       }
       if (!finalResultSent && accumulatedText.trim()) {
         commitResult(accumulatedText);
+        return;
       }
       setInterimTranscript("");
+      // Auto-restart while still in listening state — keeps the mic alive
+      // through Chrome's ~60s recognizer timeout and silent gaps.
+      if (!stopped) {
+        try {
+          recognition.start();
+          console.log("[Lumi STT] auto-restarted");
+        } catch (e) {
+          console.warn("[Lumi STT] auto-restart failed", e);
+        }
+      }
     };
 
-    recognition.start();
+    try {
+      recognition.start();
+    } catch (e) {
+      console.warn("[Lumi STT] start() failed", e);
+    }
 
     return () => {
+      stopped = true;
       if (silenceTimer) {
         clearTimeout(silenceTimer);
       }
-      recognition.abort();
+      try {
+        recognition.abort();
+      } catch {
+        /* noop */
+      }
     };
   }, [state, sendText]);
 
