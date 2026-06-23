@@ -71,15 +71,10 @@ function LumiHome() {
         {
           width: "100vw",
           height: "100dvh",
-          "--lumi-input-bottom": "max(16px, env(safe-area-inset-bottom))",
+          "--lumi-input-bottom": "24px",
           "--lumi-input-h": "clamp(56px, 8vh, 72px)",
-          "--lumi-status-bottom": "92px",
-          "--lumi-status-h": "clamp(56px, 9vh, 72px)",
-          "--lumi-chat-bottom": "130px",
-          "--lumi-chat-max-h": "clamp(220px, 36vh, 430px)",
-          "--lumi-face-top": "clamp(40px, 6vh, 72px)",
-          "--lumi-face-bottom":
-            "calc(var(--lumi-chat-bottom) + var(--lumi-chat-max-h) * 0.45)",
+          "--lumi-status-bottom": "88px",
+          "--lumi-chat-bottom": "140px",
         } as CSSProperties
       }
     >
@@ -94,13 +89,16 @@ function LumiHome() {
         aria-hidden
       />
 
-      {/* Lumi's face — fills the available area between top bar and chat zone */}
+      {/* Lumi's face — large, centered, dominant character */}
       <div
-        className="pointer-events-none absolute left-0 right-0"
+        className="pointer-events-none absolute"
         style={{
-          zIndex: 0,
-          top: "var(--lumi-face-top)",
-          bottom: "var(--lumi-face-bottom)",
+          zIndex: 1,
+          top: "8vh",
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "min(72vw, 1100px)",
+          height: "max(52vh, 360px)",
         }}
       >
         <LumiFace expression={pipeline.snapshot.expression} />
