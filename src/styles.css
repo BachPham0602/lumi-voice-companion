@@ -220,3 +220,14 @@
     transform: scale(1.025) translateY(-4px);
   }
 }
+
+@keyframes lumi-anger-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+}
