@@ -28,6 +28,7 @@ export interface UseLumiPipelineResult {
   enrolledProfiles: SpeakerProfile[];
   setEnrolledProfiles: (profiles: SpeakerProfile[]) => void;
   interimTranscript: string;
+  setInterimTranscript: (text: string) => void;
 }
 
 function generateUUID(): string {
@@ -157,5 +158,6 @@ export function useLumiPipeline(options: UseLumiPipelineOptions = {}): UseLumiPi
     enrolledProfiles,
     setEnrolledProfiles,
     interimTranscript,
+    setInterimTranscript,
   };
 }
