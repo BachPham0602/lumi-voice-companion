@@ -72,10 +72,6 @@ function LumiHome() {
       {/* Deep navy backdrop */}
       <div
         className="pointer-events-none absolute inset-0"
-        style={{ zIndex: 0 }}
-      />
-      <div
-        className="pointer-events-none absolute inset-0"
         style={{
           zIndex: 0,
           background:
