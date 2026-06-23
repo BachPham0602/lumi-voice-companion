@@ -69,7 +69,7 @@ function LumiHome() {
         className="pointer-events-none absolute inset-0 -z-10"
         style={{
           background:
-            "radial-gradient(ellipse at 30% 20%, oklch(0.55 0.18 250 / 0.55), transparent 55%), radial-gradient(ellipse at 75% 85%, oklch(0.32 0.1 260 / 0.85), transparent 60%), linear-gradient(180deg, oklch(0.22 0.06 255), oklch(0.16 0.06 260))",
+            "radial-gradient(ellipse at 50% 40%, oklch(0.32 0.13 255 / 0.7), transparent 65%), radial-gradient(ellipse at 80% 90%, oklch(0.18 0.08 260 / 0.9), transparent 60%), linear-gradient(180deg, oklch(0.12 0.05 260), oklch(0.07 0.04 265))",
         }}
         aria-hidden
       />
