@@ -15,54 +15,38 @@ interface MessengerChatProps {
  * stays visible behind it; bubbles use glassmorphism with low opacity.
  */
 export function MessengerChat({ messages, interimTranscript, listening }: MessengerChatProps) {
-  const leftRef = useRef<HTMLDivElement>(null);
-  const rightRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const showInterim = !!(listening && interimTranscript && interimTranscript.trim().length > 0);
 
-  const lumiMessages = messages.filter((m) => m.role === "lumi");
-  const userMessages = messages.filter((m) => m.role === "user");
-
   useEffect(() => {
-    leftRef.current?.scrollTo({ top: leftRef.current.scrollHeight, behavior: "smooth" });
-    rightRef.current?.scrollTo({ top: rightRef.current.scrollHeight, behavior: "smooth" });
+    const el = scrollRef.current;
+    if (!el) return;
+    el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
   }, [messages.length, interimTranscript]);
 
   const fadeMask =
-    "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.2) 12%, rgba(0,0,0,0.85) 28%, #000 45%, #000 100%)";
-  const columnStyle = {
-    bottom: "var(--lumi-chat-bottom, 200px)",
-    maxHeight: "var(--lumi-chat-max-h, 28vh)",
-    width: "min(70vw, 520px)",
-    WebkitMaskImage: fadeMask,
-    maskImage: fadeMask,
-  } as const;
+    "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.2) 10%, rgba(0,0,0,0.9) 24%, #000 38%, #000 100%)";
 
   return (
-    <>
-      {/* Lumi column — left edge */}
-      <div
-        ref={leftRef}
-        className="scrollbar-hide pointer-events-auto absolute left-3 z-10 flex flex-col gap-2 overflow-y-auto pt-12"
-        style={columnStyle}
-      >
-        {lumiMessages.map((m) => (
-          <Bubble key={m.id} role="lumi" content={m.content} />
-        ))}
-      </div>
-
-      {/* User column — right edge */}
-      <div
-        ref={rightRef}
-        className="scrollbar-hide pointer-events-auto absolute right-3 z-10 flex flex-col items-end gap-2 overflow-y-auto pt-12"
-        style={columnStyle}
-      >
-        {userMessages.map((m) => (
-          <Bubble key={m.id} role="user" content={m.content} />
-        ))}
-        {showInterim && <Bubble role="user" content={interimTranscript!} interim />}
-      </div>
-    </>
+    <div
+      ref={scrollRef}
+      className="scrollbar-hide pointer-events-auto absolute z-10 flex flex-col gap-3 overflow-y-auto px-2"
+      style={{
+        left: "50%",
+        transform: "translateX(-50%)",
+        width: "min(92vw, 820px)",
+        bottom: "var(--lumi-chat-bottom, 200px)",
+        maxHeight: "var(--lumi-chat-max-h, 42vh)",
+        WebkitMaskImage: fadeMask,
+        maskImage: fadeMask,
+      }}
+    >
+      {messages.map((m) => (
+        <Bubble key={m.id} role={m.role} content={m.content} />
+      ))}
+      {showInterim && <Bubble role="user" content={interimTranscript!} interim />}
+    </div>
   );
 }
 
