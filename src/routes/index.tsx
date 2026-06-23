@@ -139,7 +139,7 @@ function LumiHome() {
       {/* Messenger-style conversation, overlayed on top of the face */}
       <MessengerChat
         messages={pipeline.messages}
-        interimTranscript={pipeline.interimTranscript}
+        interimTranscript={undefined}
         listening={stt.isListening}
       />
 
@@ -168,6 +168,7 @@ function LumiHome() {
         muted={!stt.isListening}
         onToggleMic={() => void handleToggleMic()}
         listening={stt.isListening}
+        interimTranscript={pipeline.interimTranscript}
       />
     </main>
   );
