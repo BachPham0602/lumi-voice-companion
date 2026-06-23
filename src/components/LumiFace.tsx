@@ -145,7 +145,7 @@ export function LumiFace({ expression }: LumiFaceProps) {
           />
 
           {/* ===== ANGER / EMOTION MARK ===== */}
-          {showAnger && <AngerMark x={690} y={120} />}
+          {showAnger && <AngerMark x={680} y={140} scale={1.6} />}
         </svg>
       </div>
     </div>
@@ -309,8 +309,7 @@ function mouthPathFor(expression: LumiExpression): string {
     case "sad":
       return "M 350 485 Q 400 445 450 485";
     case "concerned":
-      // small downward arc like the reference
-      return "M 365 475 Q 400 455 435 475";
+      return "M 365 470 Q 400 498 435 470";
     case "speaking":
       return "M 365 465 Q 400 490 435 465 Q 400 455 365 465 Z";
     case "thinking":
@@ -322,7 +321,7 @@ function mouthPathFor(expression: LumiExpression): string {
     case "listening":
       return "M 365 468 Q 400 478 435 468";
     default:
-      return "M 365 475 Q 400 458 435 475";
+      return "M 365 470 Q 400 495 435 470";
   }
 }
 
@@ -330,11 +329,11 @@ function mouthPathFor(expression: LumiExpression): string {
  * ANGER MARK — the small red "stress" cross from the reference
  * ============================================================ */
 
-function AngerMark({ x, y }: { x: number; y: number }) {
+function AngerMark({ x, y, scale = 1 }: { x: number; y: number; scale?: number }) {
   const stroke = "oklch(0.62 0.22 25)";
   return (
     <g
-      transform={`translate(${x}, ${y})`}
+      transform={`translate(${x}, ${y}) scale(${scale})`}
       filter="url(#outline-glow)"
       style={{
         transformOrigin: `${x}px ${y}px`,
