@@ -31,9 +31,9 @@ export function MessengerChat({ messages, interimTranscript, listening }: Messen
   const fadeMask =
     "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.2) 12%, rgba(0,0,0,0.85) 28%, #000 45%, #000 100%)";
   const columnStyle = {
-    bottom: "120px",
-    maxHeight: "65vh",
-    width: "min(70vw, 720px)",
+    bottom: "var(--lumi-chat-bottom, 200px)",
+    maxHeight: "var(--lumi-chat-max-h, 28vh)",
+    width: "min(70vw, 520px)",
     WebkitMaskImage: fadeMask,
     maskImage: fadeMask,
   } as const;
