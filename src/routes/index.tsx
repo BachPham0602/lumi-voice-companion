@@ -94,11 +94,11 @@ function LumiHome() {
         className="pointer-events-none absolute"
         style={{
           zIndex: 1,
-          top: "8vh",
+          top: "4vh",
           left: "50%",
           transform: "translateX(-50%)",
-          width: "min(72vw, 1100px)",
-          height: "max(52vh, 360px)",
+          width: "min(85vw, 1400px)",
+          height: "min(65vh, 750px)",
         }}
       >
         <LumiFace expression={pipeline.snapshot.expression} />
