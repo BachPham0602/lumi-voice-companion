@@ -28,15 +28,9 @@ export function MessengerChat({ messages, interimTranscript, listening }: Messen
   return (
     <div
       ref={scrollRef}
-      className="pointer-events-auto absolute inset-x-0 z-10 flex flex-col gap-2 overflow-y-auto px-4 pb-6"
-      style={{ top: "min(58vh, 520px)", bottom: "110px" }}
+      className="pointer-events-auto absolute left-0 right-0 z-10 mx-auto flex w-full max-w-2xl flex-col gap-2 overflow-y-auto px-4 pb-4"
+      style={{ bottom: "120px", maxHeight: "40vh" }}
     >
-      {messages.length === 0 && !showInterim && (
-        <div className="mx-auto mt-4 max-w-md text-center text-sm text-foreground/55">
-          Lumi đang ở đây cùng bạn. Hãy nói hoặc gõ một điều gì đó nhé.
-        </div>
-      )}
-
       {messages.map((m) => (
         <Bubble key={m.id} role={m.role} content={m.content} />
       ))}
