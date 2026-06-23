@@ -234,7 +234,7 @@
   }
 }
 
-/* Hide Lovable development/preview badge globally */
+/* Hide Lovable development/preview badge globally
 gpt-engineer-badge,
 lovable-badge,
 #gpt-engineer-badge,
@@ -249,3 +249,4 @@ iframe[src*="lovable.dev"] {
   opacity: 0 !important;
   pointer-events: none !important;
 }
+*/
