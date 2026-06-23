@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useCallback, useState } from "react";
+import { useCallback, useState, type CSSProperties } from "react";
 import { Menu } from "lucide-react";
 
 import { LumiFace } from "@/components/LumiFace";
@@ -80,7 +80,7 @@ function LumiHome() {
             "calc(var(--lumi-status-bottom) + var(--lumi-status-h) + 16px)",
           "--lumi-chat-max-h": "clamp(120px, 28vh, 320px)",
           "--lumi-face-top": "clamp(56px, 9vh, 80px)",
-        } as React.CSSProperties
+        } as CSSProperties
       }
     >
       {/* Deep navy backdrop */}
