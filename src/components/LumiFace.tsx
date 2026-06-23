@@ -77,6 +77,8 @@ export function LumiFace({ expression }: LumiFaceProps) {
           role="img"
           aria-label={`Lumi — ${expression}`}
         >
+          {/* Scale all facial features by 1.2× around the viewBox centre */}
+          <g transform="translate(400, 500) scale(1.2) translate(-400, -500)">
           <defs>
             {/* Glossy eye gradient — soft blue version of the reference */}
             <radialGradient id="eye-fill" cx="50%" cy="30%" r="85%">
