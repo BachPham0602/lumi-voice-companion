@@ -74,11 +74,11 @@ function LumiHome() {
           "--lumi-input-bottom": "max(16px, env(safe-area-inset-bottom))",
           "--lumi-input-h": "clamp(56px, 8vh, 72px)",
           "--lumi-status-bottom":
-            "calc(var(--lumi-input-bottom) + var(--lumi-input-h) + 24px)",
+            "calc(var(--lumi-input-bottom) + var(--lumi-input-h) + 12px)",
           "--lumi-status-h": "clamp(56px, 9vh, 72px)",
           "--lumi-chat-bottom":
-            "calc(var(--lumi-status-bottom) + var(--lumi-status-h) + 16px)",
-          "--lumi-chat-max-h": "clamp(120px, 28vh, 320px)",
+            "calc(var(--lumi-status-bottom) + var(--lumi-status-h) + 40px)",
+          "--lumi-chat-max-h": "clamp(160px, 42vh, 420px)",
           "--lumi-face-top": "clamp(56px, 9vh, 80px)",
         } as CSSProperties
       }
@@ -139,7 +139,7 @@ function LumiHome() {
       {/* Messenger-style conversation, overlayed on top of the face */}
       <MessengerChat
         messages={pipeline.messages}
-        interimTranscript={pipeline.interimTranscript}
+        interimTranscript={undefined}
         listening={stt.isListening}
       />
 
@@ -168,6 +168,7 @@ function LumiHome() {
         muted={!stt.isListening}
         onToggleMic={() => void handleToggleMic()}
         listening={stt.isListening}
+        interimTranscript={pipeline.interimTranscript}
       />
     </main>
   );

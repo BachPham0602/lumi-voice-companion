@@ -7,6 +7,7 @@ interface ChatComposerProps {
   muted: boolean;
   onToggleMic: () => void;
   listening?: boolean;
+  interimTranscript?: string;
 }
 
 /**
@@ -19,8 +20,11 @@ export function ChatComposer({
   muted,
   onToggleMic,
   listening,
+  interimTranscript,
 }: ChatComposerProps) {
   const [value, setValue] = useState("");
+  const interim = (interimTranscript ?? "").trim();
+  const showingInterim = listening && interim.length > 0 && value.trim().length === 0;
 
   const submit = (e: FormEvent) => {
     e.preventDefault();
@@ -43,11 +47,16 @@ export function ChatComposer({
       }}
     >
         <input
-          value={value}
+          value={showingInterim ? interim : value}
           onChange={(e) => setValue(e.target.value)}
-          placeholder="Nhắn cho Lumi..."
+          readOnly={showingInterim}
+          placeholder={listening ? "Đang nghe…" : "Nhắn cho Lumi..."}
           aria-label="Nhắn cho Lumi"
-          className="flex-1 bg-transparent px-4 py-2 text-sm text-foreground placeholder:text-foreground/45 focus:outline-none"
+          className={`flex-1 bg-transparent px-4 py-2 text-sm focus:outline-none ${
+            showingInterim
+              ? "italic text-foreground/75 placeholder:text-foreground/45"
+              : "text-foreground placeholder:text-foreground/45"
+          }`}
         />
 
         {value.trim() ? (
