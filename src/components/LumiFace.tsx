@@ -60,19 +60,19 @@ export function LumiFace({ expression }: LumiFaceProps) {
       <div className="lumi-breathe relative">
         <svg
           viewBox="0 0 320 320"
-          className="h-[68vmin] w-[68vmin] max-h-[640px] max-w-[640px] drop-shadow-[0_30px_80px_rgba(255,180,120,0.35)]"
+          className="h-[68vmin] w-[68vmin] max-h-[640px] max-w-[640px] drop-shadow-[0_30px_80px_rgba(80,120,255,0.4)]"
           role="img"
           aria-label={`Lumi face — ${expression}`}
         >
           <defs>
             <radialGradient id="lumi-body" cx="50%" cy="42%" r="62%">
-              <stop offset="0%" stopColor="oklch(0.97 0.05 70)" />
-              <stop offset="55%" stopColor="oklch(0.86 0.10 55)" />
-              <stop offset="100%" stopColor="oklch(0.62 0.13 32)" />
+              <stop offset="0%" stopColor="oklch(0.85 0.13 245)" />
+              <stop offset="55%" stopColor="oklch(0.62 0.18 255)" />
+              <stop offset="100%" stopColor="oklch(0.32 0.14 260)" />
             </radialGradient>
             <radialGradient id="lumi-glow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="oklch(0.95 0.08 80 / 0.65)" />
-              <stop offset="100%" stopColor="oklch(0.95 0.08 80 / 0)" />
+              <stop offset="0%" stopColor="oklch(0.8 0.18 250 / 0.7)" />
+              <stop offset="100%" stopColor="oklch(0.8 0.18 250 / 0)" />
             </radialGradient>
             <filter id="lumi-soft" x="-30%" y="-30%" width="160%" height="160%">
               <feGaussianBlur stdDeviation="2" />
@@ -88,7 +88,7 @@ export function LumiFace({ expression }: LumiFaceProps) {
             cy="110"
             rx="36"
             ry="20"
-            fill="oklch(1 0 0 / 0.25)"
+            fill="oklch(1 0 0 / 0.18)"
             filter="url(#lumi-soft)"
           />
 
@@ -101,7 +101,7 @@ export function LumiFace({ expression }: LumiFaceProps) {
           {/* mouth */}
           <path
             d={mouth}
-            stroke="oklch(0.28 0.06 30)"
+            stroke="oklch(0.96 0.04 240)"
             strokeWidth="5"
             strokeLinecap="round"
             fill="none"
@@ -119,7 +119,7 @@ function Eye({ cx, cy, shape }: { cx: number; cy: number; shape: EyeShape }) {
     return (
       <path
         d={`M ${cx - 12} ${cy} q 12 8 24 0`}
-        stroke="oklch(0.25 0.05 30)"
+        stroke="oklch(0.96 0.04 240)"
         strokeWidth="4"
         strokeLinecap="round"
         fill="none"
@@ -130,7 +130,7 @@ function Eye({ cx, cy, shape }: { cx: number; cy: number; shape: EyeShape }) {
     return (
       <path
         d={`M ${cx - 14} ${cy + 2} q 14 -10 28 0`}
-        stroke="oklch(0.25 0.05 30)"
+        stroke="oklch(0.96 0.04 240)"
         strokeWidth="4"
         strokeLinecap="round"
         fill="none"
@@ -148,9 +148,9 @@ function Eye({ cx, cy, shape }: { cx: number; cy: number; shape: EyeShape }) {
         cy={cy + offsetY}
         rx={rx}
         ry={ry}
-        fill="oklch(0.22 0.05 30)"
+        fill="oklch(0.98 0.02 240)"
       />
-      <circle cx={cx + 2} cy={cy - 2 + offsetY} r={2.2} fill="oklch(1 0 0)" />
+      <circle cx={cx + 2} cy={cy - 2 + offsetY} r={2.2} fill="oklch(0.25 0.1 260)" />
     </g>
   );
 }
