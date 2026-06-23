@@ -68,7 +68,7 @@ export function LumiFace({ expression }: LumiFaceProps) {
         className="pointer-events-none absolute inset-0 -z-10"
         style={{
           background:
-            "radial-gradient(ellipse 60% 50% at 50% 45%, oklch(0.55 0.22 250 / 0.45), transparent 70%)",
+            "radial-gradient(ellipse 70% 60% at 50% 50%, oklch(0.4 0.18 250 / 0.3), transparent 75%)",
         }}
         aria-hidden
       />
@@ -81,15 +81,15 @@ export function LumiFace({ expression }: LumiFaceProps) {
         >
           <defs>
             {/* Glossy eye gradient — soft blue version of the reference */}
-            <radialGradient id="eye-fill" cx="50%" cy="35%" r="80%">
-              <stop offset="0%" stopColor="oklch(0.55 0.14 250)" />
-              <stop offset="55%" stopColor="oklch(0.3 0.1 255)" />
-              <stop offset="100%" stopColor="oklch(0.16 0.07 260)" />
+            <radialGradient id="eye-fill" cx="50%" cy="30%" r="85%">
+              <stop offset="0%" stopColor="oklch(0.4 0.1 255)" />
+              <stop offset="55%" stopColor="oklch(0.22 0.08 260)" />
+              <stop offset="100%" stopColor="oklch(0.08 0.04 265)" />
             </radialGradient>
             {/* Bottom inner glow — mimics the bright lower rim in the ref */}
             <radialGradient id="eye-rim" cx="50%" cy="100%" r="65%">
-              <stop offset="0%" stopColor="oklch(0.9 0.08 240 / 0.55)" />
-              <stop offset="60%" stopColor="oklch(0.9 0.08 240 / 0)" />
+              <stop offset="0%" stopColor="oklch(0.85 0.12 240 / 0.75)" />
+              <stop offset="60%" stopColor="oklch(0.85 0.12 240 / 0)" />
             </radialGradient>
             {/* Outline glow filter */}
             <filter
@@ -125,24 +125,6 @@ export function LumiFace({ expression }: LumiFaceProps) {
               transition: "transform 1.2s cubic-bezier(0.4, 0, 0.2, 1)",
             }}
           >
-            {/* outer soft glow under each eye */}
-            <ellipse
-              cx={260}
-              cy={310}
-              rx={140}
-              ry={150}
-              fill="oklch(0.7 0.18 250 / 0.18)"
-              filter="url(#strong-glow)"
-            />
-            <ellipse
-              cx={540}
-              cy={310}
-              rx={140}
-              ry={150}
-              fill="oklch(0.7 0.18 250 / 0.18)"
-              filter="url(#strong-glow)"
-            />
-
             <Eye cx={260} cy={290} shape={eyeShape} side="left" />
             <Eye cx={540} cy={290} shape={eyeShape} side="right" />
           </g>
