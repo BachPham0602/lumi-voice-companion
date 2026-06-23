@@ -11,6 +11,7 @@ import type { SpeakerProfile } from "@/types/speaker";
 
 export interface UseLumiPipelineOptions {
   initialState?: PipelineState;
+  onMessage?: (message: ChatMessage) => void;
 }
 
 export interface UseLumiPipelineResult {
@@ -19,6 +20,10 @@ export interface UseLumiPipelineResult {
   sendText: (text: string) => Promise<void>;
   setMuted: (muted: boolean) => void;
   setListening: (listening: boolean) => void;
+  /** Replace in-memory history (e.g. when loading a saved conversation). */
+  loadMessages: (messages: ChatMessage[]) => void;
+  /** Clear local history (used when starting a new conversation). */
+  resetMessages: () => void;
   /** Setters for enrolled speaker profiles — wired by future enrollment UI. */
   enrolledProfiles: SpeakerProfile[];
   setEnrolledProfiles: (profiles: SpeakerProfile[]) => void;
@@ -34,7 +39,7 @@ export interface UseLumiPipelineResult {
 export function useLumiPipeline(
   options: UseLumiPipelineOptions = {},
 ): UseLumiPipelineResult {
-  const { initialState = "idle" } = options;
+  const { initialState = "idle", onMessage } = options;
   const [state, setState] = useState<PipelineState>(initialState);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [snapshotExtras, setSnapshotExtras] = useState<{
@@ -73,6 +78,7 @@ export function useLumiPipeline(
         timestamp: Date.now(),
       };
       setMessages((prev) => [...prev, userMessage]);
+      onMessage?.(userMessage);
       historyRef.current = [
         ...historyRef.current,
         { role: "user", content: trimmed },
@@ -96,6 +102,7 @@ export function useLumiPipeline(
           timestamp: Date.now(),
         };
         setMessages((prev) => [...prev, lumiMessage]);
+        onMessage?.(lumiMessage);
         historyRef.current = [
           ...historyRef.current,
           { role: "lumi", content: result.response },
@@ -111,8 +118,23 @@ export function useLumiPipeline(
         setSnapshotExtras((prev) => ({ ...prev, error: message }));
       }
     },
-    [enrolledProfiles],
+    [enrolledProfiles, onMessage],
   );
+
+  const loadMessages = useCallback((next: ChatMessage[]) => {
+    setMessages(next);
+    historyRef.current = next.map((m) => ({
+      role: m.role,
+      content: m.content,
+    }));
+    setSnapshotExtras({});
+  }, []);
+
+  const resetMessages = useCallback(() => {
+    setMessages([]);
+    historyRef.current = [];
+    setSnapshotExtras({});
+  }, []);
 
   const snapshot = useMemo<PipelineSnapshot>(
     () => ({
@@ -129,6 +151,8 @@ export function useLumiPipeline(
     sendText,
     setMuted,
     setListening,
+    loadMessages,
+    resetMessages,
     enrolledProfiles,
     setEnrolledProfiles,
   };
