@@ -194,7 +194,7 @@ function OpenEye({
   );
 }
 
-/** Anime-style upper lashes — a thick curved lid plus 3 outward flicks. */
+/** Anime-style upper lashes — full curved lid + elegant radiating strands. */
 function Lashes({
   cx,
   cy,
@@ -208,18 +208,29 @@ function Lashes({
 }) {
   const top = cy - ry;
   return (
-    <g fill="none" stroke={EYE} strokeWidth={5} strokeLinecap="round">
-      {/* upper lid line */}
+    <g fill="none" stroke={EYE} strokeLinecap="round">
+      {/* thick upper lid line */}
       <path
         d={`M ${cx - rx - 2} ${top + 6} Q ${cx} ${top - 6} ${cx + rx + 2} ${top + 6}`}
-        strokeWidth={6}
+        strokeWidth={7}
       />
-      {/* outer flick */}
-      <path d={`M ${cx + rx + 1} ${top + 7} q 8 -4 12 -10`} />
-      {/* inner flick */}
-      <path d={`M ${cx - rx - 1} ${top + 7} q -8 -4 -12 -10`} />
-      {/* center lash */}
-      <path d={`M ${cx} ${top - 4} l 0 -8`} />
+      {/* full radiating lash strands — 7 elegant curves */}
+      {/* outermost long flick */}
+      <path d={`M ${cx + rx} ${top + 6} q 10 -14 16 -22`} strokeWidth={3} />
+      {/* second outer */}
+      <path d={`M ${cx + rx - 4} ${top + 3} q 7 -12 11 -18`} strokeWidth={2.5} />
+      {/* mid-outer */}
+      <path d={`M ${cx + rx - 10} ${top} q 5 -10 8 -15`} strokeWidth={2} />
+      {/* center peak lash — tallest & most prominent */}
+      <path d={`M ${cx} ${top - 3} q 0 -14 0 -20`} strokeWidth={3.5} />
+      {/* mid-inner */}
+      <path d={`M ${cx - rx + 10} ${top} q -5 -10 -8 -15`} strokeWidth={2} />
+      {/* second inner */}
+      <path d={`M ${cx - rx + 4} ${top + 3} q -7 -12 -11 -18`} strokeWidth={2.5} />
+      {/* innermost flick */}
+      <path d={`M ${cx - rx} ${top + 6} q -10 -14 -16 -22`} strokeWidth={3} />
+      {/* tiny accent lash near center-right for fullness */}
+      <path d={`M ${cx + rx - 18} ${top - 1} q 3 -8 5 -12`} strokeWidth={1.5} />
     </g>
   );
 }
