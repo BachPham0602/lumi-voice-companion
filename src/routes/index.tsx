@@ -101,7 +101,7 @@ function LumiHome() {
           height: "min(75vh, 900px)",
         }}
       >
-        <LumiKawaiiFace expression={pipeline.snapshot.expression} />
+        <LumiKawaiiFace expression="angry" />
       </div>
 
       {/* Top bar — hamburger only by default */}

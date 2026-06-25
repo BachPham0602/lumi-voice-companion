@@ -16,7 +16,8 @@ export type LumiExpression =
   | "surprised"
   | "wink"
   | "playful"
-  | "worried";
+  | "worried"
+  | "angry";
 
 export type UserEmotion =
   | "happy"
