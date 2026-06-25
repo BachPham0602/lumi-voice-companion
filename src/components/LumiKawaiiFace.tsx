@@ -186,9 +186,18 @@ function OpenEye({
   }
   return (
     <g>
+      {/* soft iris glow */}
+      <ellipse cx={cx} cy={cy + 2} rx={rx + 3} ry={ry + 3} fill="#1a1240" opacity={0.35} />
+      {/* main eye */}
       <ellipse cx={cx} cy={cy} rx={rx} ry={ry} fill={EYE} />
-      <circle cx={cx - 10} cy={cy - 15} r={10} fill={SHINE} />
-      <circle cx={cx + 10} cy={cy + 17} r={6} fill={SHINE} />
+      {/* iris color hint */}
+      <ellipse cx={cx} cy={cy + 4} rx={rx - 6} ry={ry - 8} fill="#3b2a78" opacity={0.85} />
+      {/* big sparkle */}
+      <ellipse cx={cx - 9} cy={cy - 16} rx={11} ry={13} fill={SHINE} />
+      {/* small sparkle */}
+      <circle cx={cx + 11} cy={cy + 16} r={6} fill={SHINE} />
+      {/* tiny accent */}
+      <circle cx={cx + 6} cy={cy - 22} r={3} fill={SHINE} opacity={0.85} />
       <Lashes cx={cx} cy={cy} rx={rx} ry={ry} />
     </g>
   );
@@ -209,28 +218,16 @@ function Lashes({
   const top = cy - ry;
   return (
     <g fill="none" stroke={EYE} strokeLinecap="round">
-      {/* thick upper lid line */}
+      {/* soft, smooth upper lid — single elegant sweep that flicks outward */}
       <path
-        d={`M ${cx - rx - 2} ${top + 6} Q ${cx} ${top - 6} ${cx + rx + 2} ${top + 6}`}
-        strokeWidth={7}
+        d={`M ${cx - rx} ${top + 8} C ${cx - rx * 0.4} ${top - 4}, ${cx + rx * 0.4} ${top - 4}, ${cx + rx + 10} ${top - 4}`}
+        strokeWidth={6}
       />
-      {/* full radiating lash strands — 7 elegant curves */}
-      {/* outermost long flick */}
-      <path d={`M ${cx + rx} ${top + 6} q 10 -14 16 -22`} strokeWidth={3} />
-      {/* second outer */}
-      <path d={`M ${cx + rx - 4} ${top + 3} q 7 -12 11 -18`} strokeWidth={2.5} />
-      {/* mid-outer */}
-      <path d={`M ${cx + rx - 10} ${top} q 5 -10 8 -15`} strokeWidth={2} />
-      {/* center peak lash — tallest & most prominent */}
-      <path d={`M ${cx} ${top - 3} q 0 -14 0 -20`} strokeWidth={3.5} />
-      {/* mid-inner */}
-      <path d={`M ${cx - rx + 10} ${top} q -5 -10 -8 -15`} strokeWidth={2} />
-      {/* second inner */}
-      <path d={`M ${cx - rx + 4} ${top + 3} q -7 -12 -11 -18`} strokeWidth={2.5} />
-      {/* innermost flick */}
-      <path d={`M ${cx - rx} ${top + 6} q -10 -14 -16 -22`} strokeWidth={3} />
-      {/* tiny accent lash near center-right for fullness */}
-      <path d={`M ${cx + rx - 18} ${top - 1} q 3 -8 5 -12`} strokeWidth={1.5} />
+      {/* one clean outer flick tail */}
+      <path
+        d={`M ${cx + rx + 4} ${top - 1} q 8 -6 14 -12`}
+        strokeWidth={3}
+      />
     </g>
   );
 }
