@@ -2,13 +2,11 @@ import { useEffect, useState } from "react";
 import type { LumiExpression } from "@/types/emotion";
 
 /**
- * Kawaii anime-style Lumi face. Inline SVG so we can animate parts (blink,
- * bounce, gentle sway) and swap eye / mouth / brow shapes per expression
- * without re-fetching assets.
- *
- * 9 supported kawaii moods: happy, excited, playful, neutral, sad, worried,
- * sleepy, surprised, wink. Other LumiExpression values are mapped to the
- * closest kawaii mood.
+ * Lumi face — inline SVG reproductions of the 9 reference kawaii expressions
+ * (Happy, Excited, Playful, Neutral, Sad, Worried, Sleepy, Surprised, Wink).
+ * Coordinates match the source 300x200 viewBox tile so each mood is faithful
+ * to the supplied sheet. Smooth CSS transitions cross-fade between moods and
+ * a random blink overlays the open-eyed expressions.
  */
 
 type Kawaii =
@@ -21,6 +19,18 @@ type Kawaii =
   | "sleepy"
   | "surprised"
   | "wink";
+
+const KAWAII_LIST: Kawaii[] = [
+  "happy",
+  "excited",
+  "playful",
+  "neutral",
+  "sad",
+  "worried",
+  "sleepy",
+  "surprised",
+  "wink",
+];
 
 function toKawaii(expr: LumiExpression): Kawaii {
   switch (expr) {
@@ -52,19 +62,6 @@ function toKawaii(expr: LumiExpression): Kawaii {
   }
 }
 
-/** Expressions whose eyes are drawn as ovals (and so can blink). */
-const BLINKABLE: Record<Kawaii, boolean> = {
-  neutral: true,
-  sad: true,
-  surprised: true,
-  excited: true,
-  wink: true, // only the open eye blinks
-  playful: true, // only the open eye blinks
-  happy: false,
-  worried: false,
-  sleepy: false,
-};
-
 interface Props {
   expression: LumiExpression;
 }
@@ -73,7 +70,6 @@ export function LumiKawaiiFace({ expression }: Props) {
   const mood = toKawaii(expression);
   const [blink, setBlink] = useState(false);
 
-  // Random natural blink loop
   useEffect(() => {
     let cancelled = false;
     const loop = () => {
@@ -96,7 +92,6 @@ export function LumiKawaiiFace({ expression }: Props) {
 
   return (
     <div className="absolute inset-0 h-full w-full">
-      {/* Soft glow behind eyes */}
       <div
         className="pointer-events-none absolute inset-0"
         aria-hidden
@@ -107,297 +102,200 @@ export function LumiKawaiiFace({ expression }: Props) {
       />
       <div className={`absolute inset-0 ${wiggle}`}>
         <svg
-          viewBox="0 0 300 220"
+          viewBox="0 0 300 200"
           preserveAspectRatio="xMidYMid meet"
           className="block h-full w-full drop-shadow-[0_20px_60px_rgba(180,120,255,0.4)]"
           role="img"
           aria-label={`Lumi — ${mood}`}
         >
-          <defs>
-            <radialGradient id="lumi-shine" cx="35%" cy="25%" r="80%">
-              <stop offset="0%" stopColor="#ffffff" />
-              <stop offset="100%" stopColor="#cfe2ff" />
-            </radialGradient>
-            <linearGradient id="lumi-eye" x1="50%" y1="0%" x2="50%" y2="100%">
-              <stop offset="0%" stopColor="#0b1330" />
-              <stop offset="60%" stopColor="#1b2a6b" />
-              <stop offset="100%" stopColor="#3457d6" />
-            </linearGradient>
-            <filter id="lumi-soft" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="0.6" />
-            </filter>
-          </defs>
-
-          {/* Blush */}
-          <g style={{ opacity: mood === "sleepy" || mood === "sad" ? 0.55 : 0.85 }}>
-            <ellipse cx="55" cy="135" rx="38" ry="14" fill="#f4a3b5" opacity="0.75" />
-            <ellipse cx="245" cy="135" rx="38" ry="14" fill="#f4a3b5" opacity="0.75" />
-          </g>
-
-          {/* Eyebrows */}
-          <Brows mood={mood} />
-
-          {/* Eyes */}
-          <Eyes mood={mood} blink={blink} />
-
-          {/* Mouth */}
-          <Mouth mood={mood} />
+          {/* Cross-fade between every expression — only the active mood has
+              opacity 1; React still keeps the others mounted so the CSS
+              opacity transition handles the morph smoothly. */}
+          {KAWAII_LIST.map((m) => (
+            <g
+              key={m}
+              style={{
+                opacity: m === mood ? 1 : 0,
+                transition: "opacity 0.35s ease",
+              }}
+            >
+              <ExpressionLayer mood={m} blink={m === mood && blink} />
+            </g>
+          ))}
         </svg>
       </div>
     </div>
   );
 }
 
-/* ===== Eyes ===== */
+/* ===== Per-expression layer — matches the reference SVG paths 1:1 ===== */
 
-function Eyes({ mood, blink }: { mood: Kawaii; blink: boolean }) {
-  const canBlink = BLINKABLE[mood] && blink;
+const EYE = "#020617";
+const SHINE = "#ffffff";
+const BLUSH = "#f4a3b5";
+const TONGUE = "#ff4d5a";
+const STROKE = 14;
 
-  // Closed-arc eyes (happy/playful-style — both closed)
-  if (mood === "happy") {
-    return (
-      <g stroke="#020617" strokeWidth={11} strokeLinecap="round" fill="none">
-        <path d="M55 90 Q95 45 135 90" />
-        <path d="M165 90 Q205 45 245 90" />
-      </g>
-    );
-  }
-  if (mood === "sleepy") {
-    return (
-      <g stroke="#020617" strokeWidth={11} strokeLinecap="round" fill="none">
-        <path d="M55 88 Q85 108 115 88" />
-        <path d="M185 88 Q215 108 245 88" />
-      </g>
-    );
-  }
-  if (mood === "worried") {
-    // Crossed/slanted lashes like the source "worried" expression
-    return (
-      <g>
-        <path d="M55 55 L115 90 Q75 100 55 55" fill="#020617" />
-        <path d="M245 55 L185 90 Q225 100 245 55" fill="#020617" />
-        <circle cx="88" cy="75" r="7" fill="#ffffff" />
-        <circle cx="212" cy="75" r="7" fill="#ffffff" />
-      </g>
-    );
-  }
+function Mouth({ d }: { d: string }) {
+  return (
+    <path
+      d={d}
+      fill="none"
+      stroke={EYE}
+      strokeWidth={STROKE}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  );
+}
 
-  if (mood === "wink") {
-    return (
-      <g>
-        <OpenEye cx={85} cy={80} rx={30} ry={42} closed={canBlink} />
-        <path
-          d="M185 85 Q215 60 245 85"
-          stroke="#020617"
-          strokeWidth={11}
-          strokeLinecap="round"
-          fill="none"
-        />
-      </g>
-    );
-  }
-  if (mood === "playful") {
-    // left closed arc, right open eye
-    return (
-      <g>
-        <path
-          d="M55 85 Q85 50 115 85"
-          stroke="#020617"
-          strokeWidth={11}
-          strokeLinecap="round"
-          fill="none"
-        />
-        <OpenEye cx={215} cy={85} rx={30} ry={42} closed={canBlink} />
-      </g>
-    );
-  }
-
-  // Open-eye moods: neutral, excited, sad, surprised
-  const eyeSize =
-    mood === "surprised"
-      ? { rx: 32, ry: 46 }
-      : mood === "excited"
-        ? { rx: 31, ry: 45 }
-        : { rx: 30, ry: 42 };
-  const sadShift = mood === "sad" ? 6 : 0;
+function Blush({ dim = false }: { dim?: boolean }) {
+  const opacity = dim ? 0.45 : 0.75;
   return (
     <g>
-      <OpenEye cx={85} cy={80 + sadShift} rx={eyeSize.rx} ry={eyeSize.ry} closed={canBlink} />
-      <OpenEye cx={215} cy={80 + sadShift} rx={eyeSize.rx} ry={eyeSize.ry} closed={canBlink} />
+      <ellipse cx={55} cy={125} rx={38} ry={14} fill={BLUSH} opacity={opacity} />
+      <ellipse cx={245} cy={125} rx={38} ry={14} fill={BLUSH} opacity={opacity} />
     </g>
   );
 }
 
+/** Open round eye with two shines, exactly like the reference. */
 function OpenEye({
   cx,
   cy,
-  rx,
-  ry,
-  closed,
+  rx = 30,
+  ry = 42,
+  blink,
 }: {
   cx: number;
   cy: number;
-  rx: number;
-  ry: number;
-  closed: boolean;
+  rx?: number;
+  ry?: number;
+  blink: boolean;
 }) {
-  if (closed) {
+  if (blink) {
     return (
       <path
-        d={`M ${cx - rx} ${cy} Q ${cx} ${cy + 10} ${cx + rx} ${cy}`}
-        stroke="#020617"
-        strokeWidth={9}
-        strokeLinecap="round"
+        d={`M ${cx - rx} ${cy} Q ${cx} ${cy + 8} ${cx + rx} ${cy}`}
         fill="none"
+        stroke={EYE}
+        strokeWidth={8}
+        strokeLinecap="round"
       />
     );
   }
   return (
     <g>
-      <ellipse cx={cx} cy={cy} rx={rx} ry={ry} fill="url(#lumi-eye)" />
-      {/* big upper shine */}
-      <ellipse
-        cx={cx - rx * 0.32}
-        cy={cy - ry * 0.38}
-        rx={rx * 0.34}
-        ry={ry * 0.32}
-        fill="url(#lumi-shine)"
-      />
-      {/* lower sparkle */}
-      <circle cx={cx + rx * 0.32} cy={cy + ry * 0.35} r={rx * 0.18} fill="#ffffff" />
-      {/* tiny secondary glint */}
-      <circle cx={cx + rx * 0.05} cy={cy - ry * 0.05} r={rx * 0.08} fill="#ffffff" opacity={0.8} />
+      <ellipse cx={cx} cy={cy} rx={rx} ry={ry} fill={EYE} />
+      <circle cx={cx - 10} cy={cy - 15} r={10} fill={SHINE} />
+      <circle cx={cx + 10} cy={cy + 17} r={6} fill={SHINE} />
     </g>
   );
 }
 
-/* ===== Eyebrows ===== */
-
-function Brows({ mood }: { mood: Kawaii }) {
-  const stroke = "#3a2a4a";
-  const sw = 6;
-  const common = {
-    stroke,
-    strokeWidth: sw,
-    strokeLinecap: "round" as const,
-    fill: "none",
-    filter: "url(#lumi-soft)",
-    style: { transition: "d 0.35s ease" as const },
-  };
-  switch (mood) {
-    case "sad":
-    case "worried":
-      return (
-        <g {...common}>
-          <path d="M50 38 Q85 22 120 42" />
-          <path d="M180 42 Q215 22 250 38" />
-        </g>
-      );
-    case "surprised":
-    case "excited":
-      return (
-        <g {...common}>
-          <path d="M55 32 Q85 22 120 32" />
-          <path d="M180 32 Q215 22 245 32" />
-        </g>
-      );
-    case "sleepy":
-      return (
-        <g {...common}>
-          <path d="M55 48 Q85 46 120 50" />
-          <path d="M180 50 Q215 46 245 48" />
-        </g>
-      );
-    default:
-      return (
-        <g {...common}>
-          <path d="M55 42 Q85 32 120 42" />
-          <path d="M180 42 Q215 32 245 42" />
-        </g>
-      );
-  }
-}
-
-/* ===== Mouth ===== */
-
-function Mouth({ mood }: { mood: Kawaii }) {
-  const stroke = "#020617";
+function ExpressionLayer({ mood, blink }: { mood: Kawaii; blink: boolean }) {
   switch (mood) {
     case "happy":
+      return (
+        <g>
+          {/* arched closed eyes */}
+          <Mouth d="M55 85 Q95 35 135 85" />
+          <Mouth d="M165 85 Q205 35 245 85" />
+          <Blush />
+          {/* big smile + tongue */}
+          <path d="M120 115 Q150 180 180 115 Z" fill={EYE} />
+          <path d="M138 152 Q150 172 162 152 Z" fill={TONGUE} />
+        </g>
+      );
     case "excited":
       return (
         <g>
-          <path d="M120 120 Q150 185 180 120 Z" fill="#020617" />
-          <path d="M138 155 Q150 175 162 155 Z" fill="#ff4d5a" />
+          <OpenEye cx={85} cy={85} rx={30} ry={45} blink={blink} />
+          <OpenEye cx={215} cy={85} rx={30} ry={45} blink={blink} />
+          <Blush />
+          <path d="M125 120 Q150 175 175 120 Z" fill={EYE} />
+          <path d="M138 150 Q150 168 162 150 Z" fill={TONGUE} />
         </g>
       );
     case "playful":
       return (
         <g>
+          {/* left winked arch, right open eye */}
+          <Mouth d="M55 80 Q85 45 115 80" />
+          <OpenEye cx={215} cy={80} blink={blink} />
+          <Blush />
           <path
-            d="M115 117 Q150 180 185 117"
+            d="M115 112 Q150 175 185 112"
             fill="none"
-            stroke={stroke}
-            strokeWidth={12}
+            stroke={EYE}
+            strokeWidth={14}
             strokeLinecap="round"
           />
-          <path d="M136 147 Q150 190 164 147 Z" fill="#ff4d5a" />
+          <path d="M136 142 Q150 185 164 142 Z" fill={TONGUE} />
+        </g>
+      );
+    case "neutral":
+      return (
+        <g>
+          <OpenEye cx={85} cy={75} blink={blink} />
+          <OpenEye cx={215} cy={75} blink={blink} />
+          <Blush />
+          <Mouth d="M110 140 Q150 170 190 140" />
+        </g>
+      );
+    case "sad":
+      return (
+        <g>
+          <OpenEye cx={85} cy={75} blink={blink} />
+          <OpenEye cx={215} cy={75} blink={blink} />
+          <Blush dim />
+          <Mouth d="M110 170 Q150 125 190 170" />
+        </g>
+      );
+    case "worried":
+      return (
+        <g>
+          {/* slanted lash shapes */}
+          <path d="M55 50 L115 85 Q75 95 55 50" fill={EYE} />
+          <path d="M245 50 L185 85 Q225 95 245 50" fill={EYE} />
+          <circle cx={88} cy={70} r={8} fill={SHINE} />
+          <circle cx={212} cy={70} r={8} fill={SHINE} />
+          <Blush />
+          <Mouth d="M115 145 Q130 130 145 145 T175 145" />
+        </g>
+      );
+    case "sleepy":
+      return (
+        <g>
+          <Mouth d="M55 80 Q85 100 115 80" />
+          <Mouth d="M185 80 Q215 100 245 80" />
+          <Blush dim />
+          <Mouth d="M120 150 Q150 165 180 150" />
+        </g>
+      );
+    case "surprised":
+      return (
+        <g>
+          <ellipse cx={85} cy={75} rx={32} ry={45} fill={EYE} />
+          <ellipse cx={215} cy={75} rx={32} ry={45} fill={EYE} />
+          <circle cx={75} cy={58} r={10} fill={SHINE} />
+          <circle cx={205} cy={58} r={10} fill={SHINE} />
+          <Blush />
+          {/* O mouth */}
+          <ellipse cx={150} cy={145} rx={28} ry={38} fill={EYE} />
+          <ellipse cx={150} cy={162} rx={18} ry={14} fill={TONGUE} />
         </g>
       );
     case "wink":
       return (
         <g>
-          <path d="M125 123 Q150 177 175 123 Z" fill="#020617" />
-          <path d="M138 155 Q150 173 162 155 Z" fill="#ff4d5a" />
+          <OpenEye cx={85} cy={75} blink={blink} />
+          {/* right winked arch */}
+          <Mouth d="M185 80 Q215 55 245 80" />
+          <Blush />
+          <path d="M125 118 Q150 172 175 118 Z" fill={EYE} />
+          <path d="M138 150 Q150 168 162 150 Z" fill={TONGUE} />
         </g>
-      );
-    case "sad":
-      return (
-        <path
-          d="M110 175 Q150 130 190 175"
-          fill="none"
-          stroke={stroke}
-          strokeWidth={12}
-          strokeLinecap="round"
-        />
-      );
-    case "worried":
-      return (
-        <path
-          d="M115 150 Q130 135 145 150 T175 150"
-          fill="none"
-          stroke={stroke}
-          strokeWidth={10}
-          strokeLinecap="round"
-        />
-      );
-    case "sleepy":
-      return (
-        <path
-          d="M120 155 Q150 170 180 155"
-          fill="none"
-          stroke={stroke}
-          strokeWidth={10}
-          strokeLinecap="round"
-        />
-      );
-    case "surprised":
-      return (
-        <g>
-          <ellipse cx={150} cy={150} rx={26} ry={36} fill="#020617" />
-          <ellipse cx={150} cy={166} rx={17} ry={13} fill="#ff4d5a" />
-        </g>
-      );
-    case "neutral":
-    default:
-      return (
-        <path
-          d="M115 145 Q150 172 185 145"
-          fill="none"
-          stroke={stroke}
-          strokeWidth={11}
-          strokeLinecap="round"
-        />
       );
   }
 }
