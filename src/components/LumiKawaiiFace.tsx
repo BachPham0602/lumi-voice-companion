@@ -189,6 +189,37 @@ function OpenEye({
       <ellipse cx={cx} cy={cy} rx={rx} ry={ry} fill={EYE} />
       <circle cx={cx - 10} cy={cy - 15} r={10} fill={SHINE} />
       <circle cx={cx + 10} cy={cy + 17} r={6} fill={SHINE} />
+      <Lashes cx={cx} cy={cy} rx={rx} ry={ry} />
+    </g>
+  );
+}
+
+/** Anime-style upper lashes — a thick curved lid plus 3 outward flicks. */
+function Lashes({
+  cx,
+  cy,
+  rx,
+  ry,
+}: {
+  cx: number;
+  cy: number;
+  rx: number;
+  ry: number;
+}) {
+  const top = cy - ry;
+  return (
+    <g fill="none" stroke={EYE} strokeWidth={5} strokeLinecap="round">
+      {/* upper lid line */}
+      <path
+        d={`M ${cx - rx - 2} ${top + 6} Q ${cx} ${top - 6} ${cx + rx + 2} ${top + 6}`}
+        strokeWidth={6}
+      />
+      {/* outer flick */}
+      <path d={`M ${cx + rx + 1} ${top + 7} q 8 -4 12 -10`} />
+      {/* inner flick */}
+      <path d={`M ${cx - rx - 1} ${top + 7} q -8 -4 -12 -10`} />
+      {/* center lash */}
+      <path d={`M ${cx} ${top - 4} l 0 -8`} />
     </g>
   );
 }
@@ -280,6 +311,8 @@ function ExpressionLayer({ mood, blink }: { mood: Kawaii; blink: boolean }) {
           <ellipse cx={215} cy={75} rx={32} ry={45} fill={EYE} />
           <circle cx={75} cy={58} r={10} fill={SHINE} />
           <circle cx={205} cy={58} r={10} fill={SHINE} />
+          <Lashes cx={85} cy={75} rx={32} ry={45} />
+          <Lashes cx={215} cy={75} rx={32} ry={45} />
           <Blush />
           {/* O mouth */}
           <ellipse cx={150} cy={145} rx={28} ry={38} fill={EYE} />
