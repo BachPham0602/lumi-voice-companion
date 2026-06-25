@@ -55,7 +55,7 @@ function toKawaii(expr: LumiExpression): Kawaii {
       return "surprised";
     case "wink":
       return "wink";
-    case "angry" as LumiExpression:
+    case "angry":
       return "angry";
     case "speaking":
       return "happy";
