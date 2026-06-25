@@ -101,7 +101,7 @@ function LumiHome() {
           height: "min(75vh, 900px)",
         }}
       >
-        <LumiKawaiiFace expression="angry" />
+        <LumiKawaiiFace expression="sad" />
       </div>
 
       {/* Top bar — hamburger only by default */}
