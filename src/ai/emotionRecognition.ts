@@ -18,6 +18,9 @@ export interface EmotionRecognizer {
 }
 
 const HEURISTICS: Array<{ keyword: RegExp; emotion: UserEmotion }> = [
+  { keyword: /(wow|trời ơi|ôi trời|không thể tin|bất ngờ|surprised|!{2,})/i, emotion: "surprised" },
+  { keyword: /(tuyệt vời|yay|hooray|excited|háo hức|phấn khích|hihi)/i, emotion: "excited" },
+  { keyword: /(haha|hehe|lol|đùa|trêu|playful|nghịch)/i, emotion: "playful" },
   { keyword: /(buồn|cô đơn|một mình|lonely|sad)/i, emotion: "lonely" },
   { keyword: /(mệt|tired|kiệt sức)/i, emotion: "tired" },
   { keyword: /(căng thẳng|stress|áp lực)/i, emotion: "stressed" },
