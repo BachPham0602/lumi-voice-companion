@@ -223,6 +223,11 @@
   animation: lumi-breathe 5s ease-in-out infinite;
 }
 
+@utility lumi-wiggle {
+  animation: lumi-wiggle 1.6s ease-in-out infinite;
+  transform-origin: 50% 60%;
+}
+
 @utility scrollbar-hide {
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -238,6 +243,16 @@
   }
   50% {
     transform: scale(1.025) translateY(-4px);
+  }
+}
+
+@keyframes lumi-wiggle {
+  0%,
+  100% {
+    transform: scale(1.02) rotate(-1.2deg);
+  }
+  50% {
+    transform: scale(1.05) rotate(1.2deg);
   }
 }
 

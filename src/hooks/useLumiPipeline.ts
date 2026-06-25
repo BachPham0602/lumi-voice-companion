@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { runLumiTurn, defaultPipelineDeps } from "@/ai/pipeline";
 import {
-  expressionForState,
+  resolveExpression,
   type ChatMessage,
   type PipelineSnapshot,
   type PipelineState,
@@ -161,7 +161,7 @@ export function useLumiPipeline(options: UseLumiPipelineOptions = {}): UseLumiPi
   const snapshot = useMemo<PipelineSnapshot>(
     () => ({
       state,
-      expression: expressionForState(state),
+      expression: resolveExpression(state, snapshotExtras.lastUserEmotion),
       ...snapshotExtras,
     }),
     [state, snapshotExtras],

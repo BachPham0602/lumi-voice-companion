@@ -32,6 +32,9 @@ export interface EmpatheticLLM {
 
 const FALLBACKS: Record<UserEmotion, string> = {
   happy: "Nghe bạn vui mình cũng vui lây đó. Kể mình nghe thêm đi nha.",
+  excited: "Wow, mình thấy năng lượng của bạn rồi nè! Kể tiếp đi!",
+  playful: "Hihi, bạn lém ghê á. Mình cũng đang cười đây nè.",
+  surprised: "Ơ thật á?! Mình bất ngờ ghê luôn. Kể mình nghe đi!",
   sad: "Mình ở đây với bạn. Cứ chậm rãi, không vội gì đâu.",
   lonely: "Có mình bên cạnh rồi. Mình lắng nghe bạn nè.",
   stressed: "Hít thở một hơi sâu nha. Mình ở đây, mọi chuyện sẽ ổn thôi.",

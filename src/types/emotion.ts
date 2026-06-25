@@ -12,9 +12,22 @@ export type LumiExpression =
   | "concerned"
   | "sleepy"
   | "excited"
-  | "confused";
+  | "confused"
+  | "surprised"
+  | "wink"
+  | "playful"
+  | "worried";
 
-export type UserEmotion = "happy" | "sad" | "lonely" | "stressed" | "tired" | "neutral";
+export type UserEmotion =
+  | "happy"
+  | "excited"
+  | "playful"
+  | "surprised"
+  | "sad"
+  | "lonely"
+  | "stressed"
+  | "tired"
+  | "neutral";
 
 export interface EmotionReading {
   emotion: UserEmotion;
@@ -28,11 +41,17 @@ export function expressionForUserEmotion(emotion: UserEmotion): LumiExpression {
   switch (emotion) {
     case "happy":
       return "happy";
+    case "excited":
+      return "excited";
+    case "playful":
+      return "playful";
+    case "surprised":
+      return "surprised";
     case "sad":
     case "lonely":
-      return "concerned";
+      return "sad";
     case "stressed":
-      return "concerned";
+      return "worried";
     case "tired":
       return "sleepy";
     case "neutral":

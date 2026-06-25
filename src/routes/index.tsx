@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useState, type CSSProperties } from "react";
 import { Menu } from "lucide-react";
 
-import { LumiFace } from "@/components/LumiFace";
+import { LumiKawaiiFace } from "@/components/LumiKawaiiFace";
 import { MessengerChat } from "@/components/MessengerChat";
 import { ChatComposer } from "@/components/ChatComposer";
 import { StatusIndicator } from "@/components/StatusIndicator";
@@ -84,7 +84,7 @@ function LumiHome() {
         style={{
           zIndex: 0,
           background:
-            "radial-gradient(ellipse at 50% 30%, oklch(0.28 0.12 255 / 0.9), transparent 65%), linear-gradient(180deg, oklch(0.1 0.05 260), oklch(0.06 0.03 265))",
+            "radial-gradient(ellipse at 30% 20%, oklch(0.55 0.2 320 / 0.85), transparent 60%), radial-gradient(ellipse at 75% 30%, oklch(0.55 0.2 350 / 0.7), transparent 55%), radial-gradient(ellipse at 50% 90%, oklch(0.5 0.22 260 / 0.7), transparent 60%), linear-gradient(180deg, oklch(0.18 0.1 290), oklch(0.1 0.06 270))",
         }}
         aria-hidden
       />
@@ -101,7 +101,7 @@ function LumiHome() {
           height: "min(75vh, 900px)",
         }}
       >
-        <LumiFace expression={pipeline.snapshot.expression} />
+        <LumiKawaiiFace expression={pipeline.snapshot.expression} />
       </div>
 
       {/* Top bar — hamburger only by default */}

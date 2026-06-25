@@ -6,6 +6,9 @@ interface EmotionIndicatorProps {
 
 const LABELS: Record<UserEmotion, { label: string; emoji: string }> = {
   happy: { label: "Vui vẻ", emoji: "✨" },
+  excited: { label: "Phấn khích", emoji: "🎉" },
+  playful: { label: "Nghịch ngợm", emoji: "😋" },
+  surprised: { label: "Bất ngờ", emoji: "😮" },
   sad: { label: "Buồn", emoji: "🌧" },
   lonely: { label: "Cô đơn", emoji: "🌙" },
   stressed: { label: "Căng thẳng", emoji: "🌀" },

@@ -1,4 +1,5 @@
 import type { LumiExpression, UserEmotion } from "./emotion";
+import { expressionForUserEmotion } from "./emotion";
 
 /**
  * Centralized pipeline states for the Lumi voice companion.
@@ -47,6 +48,21 @@ export function expressionForState(state: PipelineState): LumiExpression {
     default:
       return "idle";
   }
+}
+
+/**
+ * Choose the displayed face expression by combining the pipeline state with
+ * the last detected user emotion. When Lumi is just idle or replying we let
+ * the emotion drive the face so she mirrors the user's mood.
+ */
+export function resolveExpression(
+  state: PipelineState,
+  emotion?: UserEmotion,
+): LumiExpression {
+  if (emotion && (state === "idle" || state === "speaking")) {
+    return expressionForUserEmotion(emotion);
+  }
+  return expressionForState(state);
 }
 
 export interface ChatMessage {
