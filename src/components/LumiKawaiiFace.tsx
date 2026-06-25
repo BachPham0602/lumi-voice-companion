@@ -311,6 +311,8 @@ function ExpressionLayer({ mood, blink }: { mood: Kawaii; blink: boolean }) {
           <ellipse cx={215} cy={75} rx={32} ry={45} fill={EYE} />
           <circle cx={75} cy={58} r={10} fill={SHINE} />
           <circle cx={205} cy={58} r={10} fill={SHINE} />
+          <Lashes cx={85} cy={75} rx={32} ry={45} />
+          <Lashes cx={215} cy={75} rx={32} ry={45} />
           <Blush />
           {/* O mouth */}
           <ellipse cx={150} cy={145} rx={28} ry={38} fill={EYE} />
