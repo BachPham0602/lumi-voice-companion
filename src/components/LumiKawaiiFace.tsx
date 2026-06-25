@@ -18,7 +18,8 @@ type Kawaii =
   | "worried"
   | "sleepy"
   | "surprised"
-  | "wink";
+  | "wink"
+  | "angry";
 
 const KAWAII_LIST: Kawaii[] = [
   "happy",
@@ -30,6 +31,7 @@ const KAWAII_LIST: Kawaii[] = [
   "sleepy",
   "surprised",
   "wink",
+  "angry",
 ];
 
 function toKawaii(expr: LumiExpression): Kawaii {
@@ -53,6 +55,8 @@ function toKawaii(expr: LumiExpression): Kawaii {
       return "surprised";
     case "wink":
       return "wink";
+    case "angry" as LumiExpression:
+      return "angry";
     case "speaking":
       return "happy";
     case "listening":
