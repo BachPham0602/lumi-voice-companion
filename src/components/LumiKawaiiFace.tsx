@@ -342,5 +342,43 @@ function ExpressionLayer({ mood, blink }: { mood: Kawaii; blink: boolean }) {
           <path d="M138 150 Q150 168 162 150 Z" fill={TONGUE} />
         </g>
       );
+    case "angry":
+      return (
+        <g>
+          {/* angled angry brows */}
+          <path
+            d="M50 40 L130 70"
+            stroke={EYE}
+            strokeWidth={12}
+            strokeLinecap="round"
+            fill="none"
+          />
+          <path
+            d="M250 40 L170 70"
+            stroke={EYE}
+            strokeWidth={12}
+            strokeLinecap="round"
+            fill="none"
+          />
+          {/* narrowed glaring eyes */}
+          <ellipse cx={85} cy={92} rx={26} ry={20} fill={EYE} />
+          <ellipse cx={215} cy={92} rx={26} ry={20} fill={EYE} />
+          <circle cx={78} cy={86} r={6} fill={SHINE} />
+          <circle cx={208} cy={86} r={6} fill={SHINE} />
+          {/* flushed angry blush */}
+          <ellipse cx={55} cy={130} rx={40} ry={15} fill="#ff6b6b" opacity={0.7} />
+          <ellipse cx={245} cy={130} rx={40} ry={15} fill="#ff6b6b" opacity={0.7} />
+          {/* pouty frown */}
+          <Mouth d="M115 165 Q150 130 185 165" />
+          {/* anger vein */}
+          <path
+            d="M235 30 L245 40 L235 45 L250 55 M250 35 L260 45"
+            stroke="#ff3b3b"
+            strokeWidth={4}
+            strokeLinecap="round"
+            fill="none"
+          />
+        </g>
+      );
   }
 }
